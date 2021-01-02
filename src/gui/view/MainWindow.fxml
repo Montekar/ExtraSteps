@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="582.0" prefWidth="825.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="399.0" layoutY="32.0" text="Label" />
+      <TableView layoutX="26.0" layoutY="114.0" prefHeight="360.0" prefWidth="304.0">
+        <columns>
+          <TableColumn prefWidth="96.80002212524414" text="Title" />
+          <TableColumn prefWidth="71.19998168945312" text="Category" />
+            <TableColumn prefWidth="58.4000244140625" text="Duration" />
+            <TableColumn prefWidth="75.0" text="Rating" />
+        </columns>
+      </TableView>
+      <Label layoutX="26.0" layoutY="88.0" text="All movies" />
+      <HBox alignment="CENTER" layoutX="26.0" layoutY="474.0" prefHeight="58.0" prefWidth="304.0" spacing="30.0">
+         <children>
+            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" text="Button" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

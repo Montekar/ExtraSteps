@@ -13,7 +13,8 @@ public class CategoryModel {
     private ObservableList<Category> categoriesOverview;
 
     public CategoryModel() {
-        categoriesOverview = FXCollections.observableArrayList(new ArrayList<>());        //get categories from manager
+        categoryManager = new CategoryManager();
+        categoriesOverview = FXCollections.observableArrayList(categoryManager.getCategories());        //get categories from manager
     }
 
     public void addCategory(String name) {

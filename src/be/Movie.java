@@ -7,11 +7,10 @@ public class Movie {
     private String title;
     private String filePath;
     private String lastView;
+    private List<Category> categories;
     private int rating = 0;
 
     private int id;
-
-    private List<Category> categories;
 
     public Movie(String title, int id, Category category,String filePath) {
         this.title = title;

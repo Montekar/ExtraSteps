@@ -12,7 +12,7 @@ public class MovieModel {
 
     public MovieModel() {
         movieManager = new MovieManager();
-        moviesOverview = FXCollections.observableArrayList(movieManager.getMovies());
+        //moviesOverview = FXCollections.observableArrayList(movieManager.getMovies());
     }
 
     public void addMovie(String movieTitle, String filePath) {

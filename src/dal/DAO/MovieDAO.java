@@ -8,6 +8,10 @@ import java.util.List;
 public class MovieDAO {
     private List<Movie> movies;
 
+    public MovieDAO() {
+        movies = new ArrayList<>();
+    }
+
     public void addMovie(String movieTitle, String filePath) {
     }
 

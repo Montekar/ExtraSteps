@@ -8,6 +8,10 @@ import java.util.List;
 public class CategoryDAO {
     private List<Category> categories;
 
+    public CategoryDAO() {
+        categories = new ArrayList<>();
+    }
+
     public void addCategory(String name) {
     }
 

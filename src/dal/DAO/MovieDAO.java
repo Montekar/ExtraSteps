@@ -12,7 +12,7 @@ public class MovieDAO {
         movies = new ArrayList<>();
     }
 
-    public void addMovie(String movieTitle, String filePath) {
+    public void addMovie(String movieTitle, String movieYear, String movieCategory, String filePath) {
     }
 
     public void editMovie(Movie movie) {

@@ -1,6 +1,32 @@
 package bll;
 
+import be.Category;
+import be.Movie;
+import dal.DAO.MovieDAO;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MovieManager {
-    public void addMovie(String s, String s1, String s2, String s3, String s4) {
+    private MovieDAO movieDAO;
+
+    public MovieManager() {
+        movieDAO = new MovieDAO();
+    }
+
+    public void addMovie(String movieTitle, String filePath) {
+        movieDAO.addMovie(movieTitle, filePath);
+    }
+
+    public void editMovie(Movie movie) {
+        movieDAO.editMovie(movie);
+    }
+
+    public void deleteMovie(int id) {
+        movieDAO.deleteMovie(id);
+    }
+
+    public List<Movie> getMovies() {
+        return movieDAO.getMovies();
     }
 }

@@ -1,11 +1,18 @@
 package dal.DAO;
 
 import be.Movie;
+import dal.DataBaseConnection.DbConnectionProvider;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovieDAO {
+    private DbConnectionProvider connector;
+
+    public MovieDAO() {connector = new DbConnectionProvider();}
+
+
     private List<Movie> movies;
 
     public void addMovie(String movieTitle, String filePath) {

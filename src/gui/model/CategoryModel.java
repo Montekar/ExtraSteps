@@ -5,8 +5,6 @@ import bll.CategoryManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-
 public class CategoryModel {
 
     private CategoryManager categoryManager;

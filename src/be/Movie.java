@@ -4,25 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Movie {
-    private String name;
+    private String title;
+    private String filePath;
+    private String lastView;
+    private List<Category> categories;
+    private int rating = 0;
+
     private int id;
 
-    private List<Category> categories;
-
-    public Movie(String name, int id, Category category) {
-        this.name = name;
+    public Movie(String title, int id, Category category,String filePath) {
+        this.title = title;
         this.id = id;
+        this.filePath = filePath;
 
         categories = new ArrayList<>();
         categories.add(category);
     }
 
     public String getName() {
-        return name;
+        return title;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.title = name;
     }
 
     public int getId() {
@@ -46,5 +50,17 @@ public class Movie {
         if (categories.size() > 1) {
             categories.remove(category);
         }
+    }
+    public void setRating(int rating){
+        if(rating>0 && rating<11){
+            this.rating = rating;
+        }
+    }
+
+    public void resetRating(){
+        rating = 0;
+    }
+    public void setLastView(String date){
+        lastView = date;
     }
 }

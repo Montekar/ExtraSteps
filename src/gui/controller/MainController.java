@@ -9,7 +9,11 @@ import java.util.Arrays;
 
 public class MainController {
 
-    MovieModel movieModel = new MovieModel();
+    MovieModel movieModel;
+
+    public MainController() {
+        movieModel = new MovieModel();
+    }
 
     public void addMovie(ActionEvent actionEvent) {
         String[] result = AddMovie.display("Add Movie", "Fill the fields to add new Movie");

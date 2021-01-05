@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieDAO {
+    private List<Movie> movies;
+
     public void addMovie(String movieTitle, String filePath) {
     }
 
@@ -16,6 +18,6 @@ public class MovieDAO {
     }
 
     public List<Movie> getMovies() {
-        return new ArrayList<>();
+        return movies;
     }
 }

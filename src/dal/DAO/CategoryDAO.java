@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDAO {
+    private List<Category> categories;
 
     public void addCategory(String name) {
     }
@@ -17,6 +18,6 @@ public class CategoryDAO {
     }
 
     public List<Category> getCategories() {
-        return new ArrayList<>();
+        return categories;
     }
 }

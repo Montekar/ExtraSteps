@@ -5,8 +5,6 @@ import bll.MovieManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-
 public class MovieModel {
 
     private MovieManager movieManager;

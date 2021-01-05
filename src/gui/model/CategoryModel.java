@@ -14,7 +14,7 @@ public class CategoryModel {
 
     public CategoryModel() {
         categoryManager = new CategoryManager();
-        categoriesOverview = FXCollections.observableArrayList(categoryManager.getCategories());        //get categories from manager
+        categoriesOverview = FXCollections.observableArrayList(categoryManager.getCategories());
     }
 
     public void addCategory(String name) {
@@ -34,7 +34,7 @@ public class CategoryModel {
 
     public void updateObservableList() {
         categoriesOverview.clear();
-        categoriesOverview.addAll(new ArrayList<>()); //get categories from manager
+        categoriesOverview.addAll(categoryManager.getCategories());
     }
 
     public ObservableList<Category> getObservableCategoryList() {

@@ -16,7 +16,7 @@ public class MainController {
 
         boolean canAdd = Arrays.stream(result).anyMatch(a -> a != null && !a.isEmpty());
 
-        if (canAdd) movieModel.addMovie(result[0], result[1], result[2], result[3], result[4]);
+        //if (canAdd) movieModel.addMovie(result[0], result[1], result[2], result[3], result[4]);
     }
 
     public void editMovie(ActionEvent actionEvent) {

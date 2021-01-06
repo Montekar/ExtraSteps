@@ -15,10 +15,10 @@ import javafx.stage.Stage;
 import javax.swing.*;
 import java.io.File;
 
-public class AddMovie {
+public class Add {
 
-    public static String[] display(String title, String message) {
-        String[] movie = new String[5];
+    public static String[] addMovie(String title, String message) {
+        String[] movie = new String[4];
         Stage window = new Stage();
         //blocking other windows usage if this window is open
         window.initModality(Modality.APPLICATION_MODAL);
@@ -36,8 +36,6 @@ public class AddMovie {
         TextField movieYear = new TextField();
         Label label3 = new Label("Enter the movie category");
         TextField movieCategory = new TextField();
-        Label label4 = new Label("Enter the movie rating");
-        TextField movieRating = new TextField();
         Label label5 = new Label("Select the movie location");
         TextField movieFile = new TextField();
         Button btnSelection = new Button("Find Location");
@@ -46,12 +44,11 @@ public class AddMovie {
         Button add = new Button("Add movie");
 
         add.setOnAction(e -> {
-            if (!movieTitle.getText().isEmpty() && !movieRating.getText().isEmpty() && !movieCategory.getText().isEmpty() && !movieYear.getText().isEmpty() && !movieFile.getText().isEmpty()) {
+            if (!movieTitle.getText().isEmpty() && !movieCategory.getText().isEmpty()  && !movieYear.getText().isEmpty() && !movieFile.getText().isEmpty()) {
                 movie[0] = movieTitle.getText();
                 movie[1] = movieYear.getText();
                 movie[2] = movieCategory.getText();
-                movie[3] = movieRating.getText();
-                movie[4] = movieFile.getText();
+                movie[3] = movieFile.getText();
                 window.close();
             } else {
                 gui.controller.Alert.displayAlert("Alert", "You need to fill all the fields to add new movie!!!");
@@ -75,7 +72,7 @@ public class AddMovie {
 
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(15, 15, 15, 15));
-        layout.getChildren().addAll(label, label1, movieTitle, label2, movieYear, label3, movieCategory, label4, movieRating, label5, movieFileLayout, add);
+        layout.getChildren().addAll(label, label1, movieTitle, label2, movieYear, label3, movieCategory, label5, movieFileLayout, add);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
@@ -84,5 +81,43 @@ public class AddMovie {
         window.showAndWait();
 
         return movie;
+    }
+
+    public static String[] addCategory(String title, String message) {
+        String[] category = new String[1];
+        Stage window = new Stage();
+        //blocking other windows usage if this window is open
+        window.initModality(Modality.APPLICATION_MODAL);
+
+        window.setTitle(title);
+
+        Label label = new Label();
+        label.setText(message);
+
+        Label label1 = new Label("Enter the new Category");
+        TextField categoryName = new TextField();
+
+        Button add = new Button("Add Category");
+
+        add.setOnAction(e -> {
+            if (!categoryName.getText().isEmpty()) {
+                category[0] = categoryName.getText();
+                window.close();
+            } else {
+                gui.controller.Alert.displayAlert("Alert", "You need to fill all the fields to add new category!!!");
+            }
+        });
+
+        VBox layout = new VBox(15);
+        layout.setPadding(new Insets(15, 15, 15, 15));
+        layout.getChildren().addAll(label, label1, categoryName, add);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(layout);
+
+        window.setScene(scene);
+        window.showAndWait();
+
+        return category;
     }
 }

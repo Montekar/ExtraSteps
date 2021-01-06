@@ -5,16 +5,19 @@ import java.util.List;
 
 public class Movie {
     private String title;
+    private String year;
     private String filePath;
     private String lastView;
     private List<Category> categories;
+
     private int rating = 0;
 
     private int id;
 
-    public Movie(String title, int id, Category category,String filePath) {
+    public Movie(String title, int id, String year, Category category,String filePath) {
         this.title = title;
         this.id = id;
+        this.year = year;
         this.filePath = filePath;
 
         categories = new ArrayList<>();
@@ -35,6 +38,14 @@ public class Movie {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public List<Category> getCategories() {
@@ -63,4 +74,5 @@ public class Movie {
     public void setLastView(String date){
         lastView = date;
     }
+
 }

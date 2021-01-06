@@ -15,8 +15,8 @@ public class MovieModel {
         //moviesOverview = FXCollections.observableArrayList(movieManager.getMovies());
     }
 
-    public void addMovie(String movieTitle, String filePath) {
-        movieManager.addMovie(movieTitle,filePath);
+    public void addMovie(String movieTitle, String movieYear , String movieCategory, String filePath) {
+        movieManager.addMovie(movieTitle, movieYear, movieCategory, filePath);
         updateObservableList();
     }
 
@@ -38,5 +38,4 @@ public class MovieModel {
     public ObservableList<Movie> getObservableMovieList() {
         return moviesOverview;
     }
-
 }

@@ -37,18 +37,13 @@ public class Edit {
         TextField movieYear = new TextField();
         movieYear.setText(movie.getYear());
 
-        Label label3 = new Label("Update the movie category");
-        TextField movieCategory = new TextField();
-        movieCategory.setText(String.valueOf(movie.getCategories()));
-
         Button update = new Button("Update");
 
         update.setOnAction(e -> {
 
-            if (!movieTitle.getText().isEmpty() && !movieCategory.getText().isEmpty() && !movieYear.getText().isEmpty()) {
+            if (!movieTitle.getText().isEmpty()  && !movieYear.getText().isEmpty()) {
                 movieArr[0] = movieTitle.getText();
                 movieArr[1] = movieYear.getText();
-                movieArr[2] = movieCategory.getText();
                 window.close();
             } else {
                 Alert.displayAlert("Alert", "Something went wrong try again!!!");
@@ -57,7 +52,7 @@ public class Edit {
 
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(15, 15, 15, 15));
-        layout.getChildren().addAll(label, label1, movieTitle, label2, movieYear, label3, movieCategory, update);
+        layout.getChildren().addAll(label, label1, movieTitle, label2, movieYear, update);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);

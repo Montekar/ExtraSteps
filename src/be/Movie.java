@@ -8,20 +8,16 @@ public class Movie {
     private String year;
     private String filePath;
     private String lastView;
-    private List<Category> categories;
-
-    private int rating = 0;
+    private int rating;
 
     private int id;
 
-    public Movie(String title, int id, String year, Category category,String filePath) {
+    public Movie(String title, int id, String year, String filePath) {
         this.title = title;
         this.id = id;
         this.year = year;
         this.filePath = filePath;
-
-        categories = new ArrayList<>();
-        categories.add(category);
+        rating = 0;
     }
 
     public String getName() {
@@ -48,20 +44,6 @@ public class Movie {
         this.year = year;
     }
 
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void addCategory(Category category) {
-        categories.add(category);
-    }
-
-    public void removeCategory(Category category) {
-        //must be more than 1 category in the list!
-        if (categories.size() > 1) {
-            categories.remove(category);
-        }
-    }
     public void setRating(int rating){
         if(rating>0 && rating<11){
             this.rating = rating;
@@ -71,8 +53,13 @@ public class Movie {
     public void resetRating(){
         rating = 0;
     }
+
     public void setLastView(String date){
         lastView = date;
+    }
+
+    public String getLastView(){
+        return lastView;
     }
 
 }

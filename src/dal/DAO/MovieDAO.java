@@ -9,13 +9,10 @@ import java.util.List;
 
 public class MovieDAO {
     private DbConnectionProvider connector;
-
-    public MovieDAO() {connector = new DbConnectionProvider();}
-
-
     private List<Movie> movies;
 
     public MovieDAO() {
+        connector = new DbConnectionProvider();
         movies = new ArrayList<>();
     }
 

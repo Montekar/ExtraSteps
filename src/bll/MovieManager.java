@@ -1,10 +1,8 @@
 package bll;
 
-import be.Category;
 import be.Movie;
 import dal.DAO.MovieDAO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MovieManager {

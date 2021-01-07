@@ -6,34 +6,31 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
-
-public class DataBaseConnection {
 
     /*
     Gets database information from file. Adds it to an array to be sent to all DAO classes
     so database connection could be easily possible
     */
 
-    public static class DbConnectionProvider {
+    public class DBConnection {
 
         private static final String PROP_FILE = "data/connectionInfo.settings";
         private SQLServerDataSource ds;
+        private Properties databaseProperties;
 
-        public DbConnectionProvider()
-        {
-            try
-            {
-                Properties databaseProperties = new Properties();
+        public DBConnection() {
+            ds = new SQLServerDataSource();
+            databaseProperties = new Properties();
+
+            try {
                 databaseProperties.load(new FileInputStream(PROP_FILE));
-                ds = new SQLServerDataSource();
                 ds.setServerName(databaseProperties.getProperty("Server"));
                 ds.setDatabaseName(databaseProperties.getProperty("Database"));
                 ds.setUser(databaseProperties.getProperty("User"));
                 ds.setPassword(databaseProperties.getProperty("Password"));
-            }
-            catch(IOException e)
-            {
+            } catch (IOException e) {
                 //To DO
             }
         }
@@ -45,10 +42,7 @@ public class DataBaseConnection {
          * @return The connection with database.
          * @throws SQLServerException if connection with database cannot be established.
          */
-        public Connection getConnection() throws SQLServerException
-        {
+        public Connection getConnection() throws SQLServerException {
             return ds.getConnection();
         }
     }
-
-}

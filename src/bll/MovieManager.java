@@ -12,8 +12,8 @@ public class MovieManager {
         movieDAO = new MovieDAO();
     }
 
-    public void addMovie(String movieTitle, String movieYear, String movieCategory, String filePath) {
-        movieDAO.addMovie(movieTitle, movieYear, movieCategory, filePath);
+    public void addMovie(String movieTitle, int movieYear, String filePath) {
+        movieDAO.addMovie(movieTitle, movieYear, filePath);
     }
 
     public void editMovie(Movie movie) {

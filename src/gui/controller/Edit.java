@@ -31,11 +31,11 @@ public class Edit {
 
         Label label1 = new Label("Update the movie title");
         TextField movieTitle = new TextField();
-        movieTitle.setText(movie.getName());
+        movieTitle.setText(movie.getTitle());
 
         Label label2 = new Label("Update the movie year");
         TextField movieYear = new TextField();
-        movieYear.setText(movie.getYear());
+        movieYear.setText(String.valueOf(movie.getYear()));
 
         Button update = new Button("Update");
 

@@ -6,16 +6,28 @@ import gui.model.CategoryModel;
 import gui.model.MovieModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.awt.*;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 
-public class MainController {
+public class MainController implements Initializable {
 
     @FXML
-    TableView<Movie> movieTable;
+    private TableView<Movie> movieTable;
+
+    @FXML
+    private TableColumn<Movie, String> colMovieTitle;
+    @FXML
+    private TableColumn<Movie, Integer> colMovieYear;
+    @FXML
+    private TableColumn<Movie, String> colMovieRating;
+
 
     @FXML
     TableView<Category> categoryTable;
@@ -28,13 +40,22 @@ public class MainController {
         categoryModel = new CategoryModel();
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        colMovieTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
+        colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
+
+        movieTable.setItems(movieModel.getObservableMovieList());
+    }
+
     /*
     Method to add a movie to the database
      */
     public void addMovie(ActionEvent actionEvent) {
         String[] result = Add.addMovie("Add Movie", "Fill the fields to add new Movie");
-        if(Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-            movieModel.addMovie(result[0], result[1], result[2], result[3]);
+        if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
+            movieModel.addMovie(result[0], Integer.parseInt(result[1]), result[2]);
         }
     }
 
@@ -46,9 +67,9 @@ public class MainController {
             Movie movie = movieTable.getSelectionModel().getSelectedItem();
             String[] result = Edit.editMovie("Edit Movie", "Edit the chosen Movie", movie);
 
-            if(Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-                movie.setName(result[0]);
-                movie.setYear(result[1]);
+            if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
+                movie.setTitle(result[0]);
+                movie.setYear(Integer.parseInt(result[1]));
                 movieModel.editMovie(movie);
             }
         }
@@ -58,7 +79,7 @@ public class MainController {
     Method to delete selected Movie
      */
     public void deleteMovie(ActionEvent actionEvent) {
-        if(movieTable.getSelectionModel().getSelectedItem() != null){
+        if (movieTable.getSelectionModel().getSelectedItem() != null) {
             int selectedId = movieTable.getSelectionModel().getSelectedItem().getId();
 
             movieModel.deleteMovie(selectedId);
@@ -72,7 +93,7 @@ public class MainController {
      */
     public void addCategory(ActionEvent actionEvent) {
         String[] result = Add.addCategory("Add Category", "Fill the fields to add new Category");
-        if(Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
+        if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
             categoryModel.addCategory(result[1]);
         }
     }
@@ -85,7 +106,7 @@ public class MainController {
             Category category = categoryTable.getSelectionModel().getSelectedItem();
             String[] result = Edit.editCategory("Edit Movie", "Edit the chosen Movie", category);
 
-            if(Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
+            if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
                 category.setName(result[0]);
                 categoryModel.editCategory(category);
             }
@@ -96,7 +117,7 @@ public class MainController {
     Method to delete a Category
      */
     public void deleteCategory(ActionEvent actionEvent) {
-        if(categoryTable.getSelectionModel().getSelectedItem() != null){
+        if (categoryTable.getSelectionModel().getSelectedItem() != null) {
             int selectedId = categoryTable.getSelectionModel().getSelectedItem().getId();
 
             categoryModel.deleteCategory(selectedId);
@@ -111,6 +132,8 @@ public class MainController {
     public void goTo(ActionEvent actionEvent) {
         try {
             Desktop.getDesktop().browse(new URL("https://www.imdb.com/").toURI());
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
+
 }

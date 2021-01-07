@@ -34,8 +34,6 @@ public class Add {
         TextField movieTitle = new TextField();
         Label label2 = new Label("Enter the movie year");
         TextField movieYear = new TextField();
-        Label label3 = new Label("Enter the movie category");
-        TextField movieCategory = new TextField();
         Label label5 = new Label("Select the movie location");
         TextField movieFile = new TextField();
         Button btnSelection = new Button("Find Location");
@@ -44,11 +42,10 @@ public class Add {
         Button add = new Button("Add movie");
 
         add.setOnAction(e -> {
-            if (!movieTitle.getText().isEmpty() && !movieCategory.getText().isEmpty()  && !movieYear.getText().isEmpty() && !movieFile.getText().isEmpty()) {
+            if (!movieTitle.getText().isEmpty() && !movieYear.getText().isEmpty() && !movieFile.getText().isEmpty()) {
                 movie[0] = movieTitle.getText();
                 movie[1] = movieYear.getText();
-                movie[2] = movieCategory.getText();
-                movie[3] = movieFile.getText();
+                movie[2] = movieFile.getText();
                 window.close();
             } else {
                 gui.controller.Alert.displayAlert("Alert", "You need to fill all the fields to add new movie!!!");
@@ -72,7 +69,7 @@ public class Add {
 
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(15, 15, 15, 15));
-        layout.getChildren().addAll(label, label1, movieTitle, label2, movieYear, label3, movieCategory, label5, movieFileLayout, add);
+        layout.getChildren().addAll(label, label1, movieTitle, label2, movieYear, label5, movieFileLayout, add);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);

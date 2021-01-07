@@ -2,7 +2,6 @@ package bll;
 
 import be.Category;
 import dal.DAO.CategoryDAO;
-import dal.IDALFacade;
 
 import java.util.List;
 

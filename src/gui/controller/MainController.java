@@ -9,6 +9,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -32,6 +33,8 @@ public class MainController implements Initializable {
     private TableColumn<Movie, String> colMovieRating;
     @FXML
     private TextField searchBar;
+    @FXML
+    private ChoiceBox filterCategory;
 
 
     @FXML
@@ -51,6 +54,11 @@ public class MainController implements Initializable {
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
 
+        /*
+        Search bar searching function
+         */
+
+        //Wrapping observable list inside of filtered
         FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(),p -> true);
 
         searchBar.textProperty().addListener(((observableValue, oldValue, newValue) ->{
@@ -135,7 +143,7 @@ public class MainController implements Initializable {
     public void addCategory(ActionEvent actionEvent) {
         String[] result = Add.addCategory("Add Category", "Fill the fields to add new Category");
         if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-            categoryModel.addCategory(result[1]);
+            categoryModel.addCategory(result[0]);
         }
     }
 

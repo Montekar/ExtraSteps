@@ -4,11 +4,16 @@ import be.Category;
 import be.Movie;
 import gui.model.CategoryModel;
 import gui.model.MovieModel;
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.awt.*;
@@ -18,6 +23,7 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    public TextField fieldSearch;
     @FXML
     private TableView<Movie> movieTable;
 
@@ -31,6 +37,8 @@ public class MainController implements Initializable {
 
     @FXML
     TableView<Category> categoryTable;
+    @FXML
+    private ChoiceBox<Category> choiceCategory;
 
     MovieModel movieModel;
     CategoryModel categoryModel;
@@ -46,7 +54,14 @@ public class MainController implements Initializable {
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
 
+        choiceCategory.setItems(categoryModel.getObservableCategoryList());
         movieTable.setItems(movieModel.getObservableMovieList());
+        choiceCategory.getSelectionModel().selectFirst();
+
+
+        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+            System.out.println(choiceCategory.getValue());
+        });
     }
 
     /*
@@ -135,5 +150,4 @@ public class MainController implements Initializable {
         } catch (Exception e) {
         }
     }
-
 }

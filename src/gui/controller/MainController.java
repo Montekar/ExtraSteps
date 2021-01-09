@@ -34,8 +34,6 @@ public class MainController implements Initializable {
     private TableColumn<Movie, Integer> colMovieYear;
     @FXML
     private TableColumn<Movie, String> colMovieRating;
-    @FXML
-    private TextField searchBar;
 
 
     @FXML
@@ -65,6 +63,7 @@ public class MainController implements Initializable {
         choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
             System.out.println(choiceCategory.getValue());
         });
+
         FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(),p -> true);
 
         searchBar.textProperty().addListener(((observableValue, oldValue, newValue) ->{

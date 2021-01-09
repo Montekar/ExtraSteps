@@ -4,11 +4,14 @@ import be.Category;
 import be.Movie;
 import gui.model.CategoryModel;
 import gui.model.MovieModel;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.awt.*;
@@ -27,6 +30,8 @@ public class MainController implements Initializable {
     private TableColumn<Movie, Integer> colMovieYear;
     @FXML
     private TableColumn<Movie, String> colMovieRating;
+    @FXML
+    private TextField searchBar;
 
 
     @FXML
@@ -46,7 +51,43 @@ public class MainController implements Initializable {
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
 
-        movieTable.setItems(movieModel.getObservableMovieList());
+        FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(),p -> true);
+
+        searchBar.textProperty().addListener(((observableValue, oldValue, newValue) ->{
+            filteredData.setPredicate( movie -> {
+
+                //if filter is empty display all data
+                if (newValue == null || newValue.isEmpty()){
+                    return true;
+                }
+
+                //value to lower case
+                String newValLow = newValue.toLowerCase();
+
+                //checks if the value is part of data in any movie
+                if (movie.getTitle().toLowerCase().contains(newValLow)){
+                    return true;
+                }else if (String.valueOf(movie.getYear()).contains(newValLow)){
+                    return true;
+                }else if(String.valueOf(movie.getRating()).contains(newValLow)){
+                    return true;
+                }
+
+                return false;
+            });
+
+        } ));
+
+        //the filtered data is put inside of the sorted list
+        SortedList<Movie> sortedData = new SortedList<>(filteredData);
+
+        //sorted list is bind with the table
+        sortedData.comparatorProperty().bind(movieTable.comparatorProperty());
+
+        //displaying the data
+        movieTable.setItems(sortedData);
+
+        //movieTable.setItems(movieModel.getObservableMovieList());
     }
 
     /*

@@ -27,4 +27,5 @@ public class MovieManager {
     public List<Movie> getMovies() {
         return movieDAO.getMovies();
     }
+
 }

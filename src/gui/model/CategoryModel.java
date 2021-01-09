@@ -1,7 +1,6 @@
 package gui.model;
 
 import be.Category;
-import be.Movie;
 import bll.CategoryManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

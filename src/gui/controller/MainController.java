@@ -4,6 +4,8 @@ import be.Category;
 import be.Movie;
 import gui.model.CategoryModel;
 import gui.model.MovieModel;
+
+import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -22,6 +24,7 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    public TextField searchBar;
     @FXML
     private TableView<Movie> movieTable;
 
@@ -31,14 +34,12 @@ public class MainController implements Initializable {
     private TableColumn<Movie, Integer> colMovieYear;
     @FXML
     private TableColumn<Movie, String> colMovieRating;
-    @FXML
-    private TextField searchBar;
-    @FXML
-    private ChoiceBox filterCategory;
 
 
     @FXML
     TableView<Category> categoryTable;
+    @FXML
+    private ChoiceBox<Category> choiceCategory;
 
     MovieModel movieModel;
     CategoryModel categoryModel;
@@ -54,11 +55,15 @@ public class MainController implements Initializable {
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
 
-        /*
-        Search bar searching function
-         */
+        choiceCategory.setItems(categoryModel.getObservableCategoryList());
+        movieTable.setItems(movieModel.getObservableMovieList());
+        choiceCategory.getSelectionModel().selectFirst();
 
-        //Wrapping observable list inside of filtered
+
+        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+            System.out.println(choiceCategory.getValue());
+        });
+
         FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(),p -> true);
 
         searchBar.textProperty().addListener(((observableValue, oldValue, newValue) ->{
@@ -95,7 +100,6 @@ public class MainController implements Initializable {
         //displaying the data
         movieTable.setItems(sortedData);
 
-        //movieTable.setItems(movieModel.getObservableMovieList());
     }
 
     /*
@@ -132,8 +136,6 @@ public class MainController implements Initializable {
             int selectedId = movieTable.getSelectionModel().getSelectedItem().getId();
 
             movieModel.deleteMovie(selectedId);
-
-            movieTable.setItems(movieModel.getObservableMovieList());
         }
     }
 
@@ -143,7 +145,7 @@ public class MainController implements Initializable {
     public void addCategory(ActionEvent actionEvent) {
         String[] result = Add.addCategory("Add Category", "Fill the fields to add new Category");
         if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-            categoryModel.addCategory(result[0]);
+            categoryModel.addCategory(result[1]);
         }
     }
 
@@ -184,5 +186,4 @@ public class MainController implements Initializable {
         } catch (Exception e) {
         }
     }
-
 }

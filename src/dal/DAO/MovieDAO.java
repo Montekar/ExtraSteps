@@ -1,6 +1,8 @@
 package dal.DAO;
 
+import be.Category;
 import be.Movie;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dal.DBConnection;
 
 import java.sql.*;
@@ -32,7 +34,7 @@ public class MovieDAO {
                             rs.getInt("Year"),
                             rs.getString("Link"),
                             rs.getInt("Rating"));
-
+                    movie.setCategories(getCategories(movie.getId()));
                     tempMovies.add(movie);
                 }
             }
@@ -40,6 +42,28 @@ public class MovieDAO {
             throwables.printStackTrace();
         }
         movies = tempMovies;
+    }
+
+    public List<Category> getCategories(int movieID) {
+        List<Category> movieCategories = new ArrayList<>();
+
+        try (Connection connection = connector.getConnection()) {
+            String sql = "SELECT * FROM CatMovie INNER JOIN Category ON Category.CategoryID=CatMovie.CategoryID WHERE MovieID = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, movieID);
+            statement.execute();
+
+            ResultSet rs = statement.getResultSet();
+            while (rs.next()) {
+                Category category = new Category(rs.getString("Name"),
+                        rs.getInt("CategoryID"));
+                movieCategories.add(category);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return movieCategories;
     }
 
     public void addMovie(String movieTitle, int movieYear, String filePath) {
@@ -53,7 +77,7 @@ public class MovieDAO {
 
             ResultSet rs = statement.getGeneratedKeys();
             if (rs.next()) {
-                Movie movie = new Movie(movieTitle, rs.getInt(1), movieYear, filePath);
+                Movie movie = new Movie(movieTitle, rs.getInt(1), movieYear, filePath, 0);
                 movies.add(movie);
             }
         } catch (SQLException throwables) {

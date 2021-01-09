@@ -2,13 +2,16 @@ package be;
 
 import javafx.beans.property.SimpleObjectProperty;
 
-public class Movie {
-    private int rating;
-    private int year;
+import java.util.ArrayList;
+import java.util.List;
 
+public class Movie {
     private String title;
     private String filePath;
     private String lastView;
+    private int rating;
+    private int year;
+    private List<Category> categories;
 
     private int id;
 
@@ -18,15 +21,9 @@ public class Movie {
         this.year = year;
         this.filePath = filePath;
         this.rating = rating;
+        categories = new ArrayList<>();
     }
 
-    public Movie(String title, int id, int year, String filePath) {
-        this.title = title;
-        this.id = id;
-        this.year = year;
-        this.filePath = filePath;
-        rating = 0;
-    }
     public int getId() {
         return id;
     }
@@ -66,9 +63,9 @@ public class Movie {
     }
     public SimpleObjectProperty<String> getRatingProperty(){
         if(rating==0){
-            return new SimpleObjectProperty<>("no rating");
+            return new SimpleObjectProperty<>("No rating");
         }
-        return new SimpleObjectProperty<>(String.valueOf(rating));
+        return new SimpleObjectProperty<>(String.valueOf(rating)+ " Stars");
     }
 
     public String getTitle() {
@@ -85,6 +82,14 @@ public class Movie {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
     @Override

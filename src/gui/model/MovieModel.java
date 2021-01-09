@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 public class MovieModel {
 
     private MovieManager movieManager;
+
     private ObservableList<Movie> moviesOverview;
 
     public MovieModel() {

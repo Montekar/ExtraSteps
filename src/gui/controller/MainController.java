@@ -136,8 +136,6 @@ public class MainController implements Initializable {
             int selectedId = movieTable.getSelectionModel().getSelectedItem().getId();
 
             movieModel.deleteMovie(selectedId);
-
-            movieTable.setItems(movieModel.getObservableMovieList());
         }
     }
 

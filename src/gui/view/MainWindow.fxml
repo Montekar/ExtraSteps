@@ -51,6 +51,6 @@
         </columns>
       </TableView>
       <ChoiceBox fx:id="choiceCategory" layoutX="33.0" layoutY="116.0" prefWidth="150.0" />
-      <TextField fx:id="fieldSearch" layoutX="193.0" layoutY="115.0" prefHeight="26.0" prefWidth="150.0" promptText="Search Movies" />
+      <TextField fx:id="searchBar" layoutX="193.0" layoutY="115.0" prefHeight="26.0" prefWidth="150.0" promptText="Search Movies" />
    </children>
 </AnchorPane>

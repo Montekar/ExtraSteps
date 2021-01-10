@@ -4,6 +4,7 @@ import be.Movie;
 import dal.DAO.MovieDAO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MovieManager {
     private MovieDAO movieDAO;
@@ -32,4 +33,10 @@ public class MovieManager {
         return movieDAO.getMovies();
     }
 
+    public List<Movie> getCatMovies(int selectedCategoryID) {
+        if(selectedCategoryID == 0){
+            return getMovies();
+        }
+        return movieDAO.getMovies().stream().filter(x -> x.getCategories().stream().anyMatch(s -> s.getId() == selectedCategoryID)).collect(Collectors.toList());
+    }
 }

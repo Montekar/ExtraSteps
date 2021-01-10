@@ -3,8 +3,8 @@ package bll;
 import be.Movie;
 import dal.DAO.MovieDAO;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MovieManager {
     private MovieDAO movieDAO;
@@ -33,12 +33,6 @@ public class MovieManager {
         if(selectedCategoryID == 0){
             return getMovies();
         }
-        List<Movie> categoryMovies = new ArrayList<>();
-        for (Movie m : getMovies()){
-            if(m.getCategories().stream().anyMatch(x -> x.getId() == selectedCategoryID)){
-                categoryMovies.add(m);
-            }
-        }
-            return categoryMovies;
+        return movieDAO.getMovies().stream().filter(x -> x.getCategories().stream().anyMatch(s -> s.getId() == selectedCategoryID)).collect(Collectors.toList());
     }
 }

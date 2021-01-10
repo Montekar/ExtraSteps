@@ -58,7 +58,7 @@ public class MainController implements Initializable {
         choiceCategory.setItems(categoryModel.getObservableCategoryList());
         movieTable.setItems(movieModel.getObservableMovieList());
         choiceCategory.getSelectionModel().selectFirst();
-
+        movieModel.setCategoryID(choiceCategory.getValue().getId());
 
         choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
             movieModel.setCategoryID(choiceCategory.getValue().getId());

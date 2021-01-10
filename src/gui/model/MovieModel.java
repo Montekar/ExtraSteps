@@ -5,15 +5,17 @@ import bll.MovieManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
+
 public class MovieModel {
 
     private MovieManager movieManager;
     private ObservableList<Movie> moviesOverview;
-    private int selectedCategoryID = 0;
+    private int selectedCategoryID;
 
     public MovieModel() {
         movieManager = new MovieManager();
-        moviesOverview = FXCollections.observableArrayList(movieManager.getCatMovies(selectedCategoryID));
+        moviesOverview = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     public void addMovie(String movieTitle, int movieYear, String filePath) {

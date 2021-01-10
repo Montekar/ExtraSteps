@@ -55,14 +55,15 @@ public class MainController implements Initializable {
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
 
-        choiceCategory.setItems(categoryModel.getObservableCategoryList());
         movieTable.setItems(movieModel.getObservableMovieList());
-        choiceCategory.getSelectionModel().selectFirst();
-        movieModel.setCategoryID(choiceCategory.getValue().getId());
-
-        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+        if(this.choiceCategory != null){
+            choiceCategory.setItems(categoryModel.getObservableCategoryList());
+            choiceCategory.getSelectionModel().selectFirst();
             movieModel.setCategoryID(choiceCategory.getValue().getId());
-        });
+            choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+                movieModel.setCategoryID(choiceCategory.getValue().getId());
+            });
+        }
 
         FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(),p -> true);
 
@@ -145,7 +146,7 @@ public class MainController implements Initializable {
     public void addCategory(ActionEvent actionEvent) {
         String[] result = Add.addCategory("Add Category", "Fill the fields to add new Category");
         if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-            categoryModel.addCategory(result[1]);
+            categoryModel.addCategory(result[0]);
         }
     }
 

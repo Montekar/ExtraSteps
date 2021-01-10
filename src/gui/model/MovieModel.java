@@ -8,12 +8,12 @@ import javafx.collections.ObservableList;
 public class MovieModel {
 
     private MovieManager movieManager;
-
     private ObservableList<Movie> moviesOverview;
+    private int selectedCategoryID = 0;
 
     public MovieModel() {
         movieManager = new MovieManager();
-        moviesOverview = FXCollections.observableArrayList(movieManager.getMovies());
+        moviesOverview = FXCollections.observableArrayList(movieManager.getCatMovies(selectedCategoryID));
     }
 
     public void addMovie(String movieTitle, int movieYear, String filePath) {
@@ -33,10 +33,15 @@ public class MovieModel {
 
     public void updateObservableList() {
         moviesOverview.clear();
-        moviesOverview.addAll(movieManager.getMovies());
+        moviesOverview.addAll(movieManager.getCatMovies(selectedCategoryID));
     }
 
     public ObservableList<Movie> getObservableMovieList() {
         return moviesOverview;
+    }
+
+    public void setCategoryID(int selectedCategoryID) {
+        this.selectedCategoryID = selectedCategoryID;
+        updateObservableList();
     }
 }

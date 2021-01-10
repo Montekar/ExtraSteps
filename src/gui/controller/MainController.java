@@ -61,7 +61,7 @@ public class MainController implements Initializable {
 
 
         choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
-            System.out.println(choiceCategory.getValue());
+            movieModel.setCategoryID(choiceCategory.getValue().getId());
         });
 
         FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(),p -> true);

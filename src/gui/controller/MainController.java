@@ -35,14 +35,13 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Movie, String> colMovieRating;
 
-
     @FXML
-    TableView<Category> categoryTable;
+    private TableView<Category> categoryTable;
     @FXML
     private ChoiceBox<Category> choiceCategory;
 
-    MovieModel movieModel;
-    CategoryModel categoryModel;
+    private final MovieModel movieModel;
+    private final CategoryModel categoryModel;
 
     public MainController() {
         movieModel = new MovieModel();
@@ -62,16 +61,17 @@ public class MainController implements Initializable {
         movieModel.setCategoryID(choiceCategory.getValue().getId());
 
         choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
-            movieModel.setCategoryID(choiceCategory.getValue().getId());
+            if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
+                movieModel.setCategoryID(choiceCategory.getValue().getId());
+            }
         });
 
-        FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(),p -> true);
+        FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(), p -> true);
 
-        searchBar.textProperty().addListener(((observableValue, oldValue, newValue) ->{
-            filteredData.setPredicate( movie -> {
-
+        searchBar.textProperty().addListener(((observableValue, oldValue, newValue) -> {
+            filteredData.setPredicate(movie -> {
                 //if filter is empty display all data
-                if (newValue == null || newValue.isEmpty()){
+                if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
@@ -79,18 +79,17 @@ public class MainController implements Initializable {
                 String newValLow = newValue.toLowerCase();
 
                 //checks if the value is part of data in any movie
-                if (movie.getTitle().toLowerCase().contains(newValLow)){
+                if (movie.getTitle().toLowerCase().contains(newValLow)) {
                     return true;
-                }else if (String.valueOf(movie.getYear()).contains(newValLow)){
+                } else if (String.valueOf(movie.getYear()).contains(newValLow)) {
                     return true;
-                }else if(String.valueOf(movie.getRating()).contains(newValLow)){
+                } else if (String.valueOf(movie.getRating()).contains(newValLow)) {
                     return true;
                 }
-
                 return false;
             });
 
-        } ));
+        }));
 
         //the filtered data is put inside of the sorted list
         SortedList<Movie> sortedData = new SortedList<>(filteredData);
@@ -146,7 +145,8 @@ public class MainController implements Initializable {
     public void addCategory(ActionEvent actionEvent) {
         String[] result = Add.addCategory("Add Category", "Fill the fields to add new Category");
         if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-            categoryModel.addCategory(result[1]);
+            categoryModel.addCategory(result[0]);
+            choiceCategory.getSelectionModel().selectLast();
         }
     }
 
@@ -154,13 +154,17 @@ public class MainController implements Initializable {
     Method to edit a Category
      */
     public void editCategory(ActionEvent actionEvent) {
-        if (categoryTable.getSelectionModel().getSelectedItem() != null) {
-            Category category = categoryTable.getSelectionModel().getSelectedItem();
-            String[] result = Edit.editCategory("Edit Movie", "Edit the chosen Movie", category);
+        if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
+            int index = choiceCategory.getSelectionModel().getSelectedIndex();
+            String catName = choiceCategory.getSelectionModel().getSelectedItem().getName();
+            int catID = choiceCategory.getSelectionModel().getSelectedItem().getId();
+
+            String[] result = Edit.editCategory("Edit Movie", "Edit the chosen Movie", catName);
 
             if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-                category.setName(result[0]);
+                Category category = new Category(result[0], catID);
                 categoryModel.editCategory(category);
+                choiceCategory.getSelectionModel().select(index);
             }
         }
     }
@@ -169,12 +173,10 @@ public class MainController implements Initializable {
     Method to delete a Category
      */
     public void deleteCategory(ActionEvent actionEvent) {
-        if (categoryTable.getSelectionModel().getSelectedItem() != null) {
-            int selectedId = categoryTable.getSelectionModel().getSelectedItem().getId();
-
+        if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
+            int selectedId = choiceCategory.getSelectionModel().getSelectedItem().getId();
             categoryModel.deleteCategory(selectedId);
-
-            categoryTable.setItems(categoryModel.getObservableCategoryList());
+            choiceCategory.getSelectionModel().selectFirst();
         }
     }
 

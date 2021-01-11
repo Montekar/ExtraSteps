@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -9,10 +8,13 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.Rating?>
 
-<AnchorPane prefHeight="474.0" prefWidth="353.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controller.MainController">
+<AnchorPane prefHeight="574.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controller.MainController">
    <children>
-      <MenuBar prefHeight="26.0" prefWidth="374.0">
+      <MenuBar prefHeight="26.0" prefWidth="228.0">
         <menus>
           <Menu mnemonicParsing="false" text="Movie">
             <items>
@@ -42,15 +44,25 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Label layoutX="60.0" layoutY="78.0" text="&gt;&gt;Such and such movie is currently playing?&lt;&lt;" />
-      <TableView fx:id="movieTable" layoutX="30.0" layoutY="149.0" prefHeight="295.0" prefWidth="314.0">
+      <TableView fx:id="movieTable" layoutX="-1.0" layoutY="159.0" prefHeight="295.0" prefWidth="572.0">
         <columns>
-          <TableColumn fx:id="colMovieTitle" prefWidth="200.79998779296875" text="Title" />
-          <TableColumn fx:id="colMovieYear" prefWidth="52.80000305175781" text="Year" />
-            <TableColumn fx:id="colMovieRating" prefWidth="63.20001220703125" text="Rating" />
+          <TableColumn fx:id="colMovieTitle" prefWidth="304.80003052949905" text="Title" />
+          <TableColumn fx:id="colMovieYear" prefWidth="131.199951171875" text="Year" />
+            <TableColumn fx:id="colMovieRating" prefWidth="136.79994201660156" text="Rating" />
         </columns>
       </TableView>
-      <ChoiceBox fx:id="choiceCategory" layoutX="33.0" layoutY="116.0" prefWidth="150.0" />
-      <TextField fx:id="searchBar" layoutX="193.0" layoutY="115.0" prefHeight="26.0" prefWidth="150.0" promptText="Search Movies" />
+      <ChoiceBox fx:id="choiceCategory" layoutX="416.0" layoutY="13.0" prefHeight="26.0" prefWidth="147.0" />
+      <TextField fx:id="searchBar" alignment="CENTER" layoutY="132.0" prefHeight="26.0" prefWidth="578.0" promptText="Search For Movies" />
+      <Rating fx:id="movieRating" layoutX="108.0" layoutY="510.0" max="10" prefHeight="18.0" prefWidth="216.0" rating="0.0" />
+      <Text layoutX="237.0" layoutY="501.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Text>
+      <Text layoutX="347.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Category: ">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

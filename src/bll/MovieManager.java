@@ -25,6 +25,10 @@ public class MovieManager {
         movieDAO.deleteMovie(id);
     }
 
+    public void setRating(int newRating,int movieID){
+        movieDAO.setRating(newRating, movieID);
+    }
+
     public List<Movie> getMovies() {
         return movieDAO.getMovies();
     }

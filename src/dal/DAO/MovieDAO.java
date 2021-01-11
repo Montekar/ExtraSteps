@@ -8,6 +8,7 @@ import dal.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MovieDAO {
     private DBConnection connector;
@@ -97,6 +98,22 @@ public class MovieDAO {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+    }
+
+    public void setRating(int newRating, int movieID){
+        if(newRating<11 && newRating>0) {
+            try (Connection connection = connector.getConnection();) {
+                String sql = "UPDATE Movie SET Rating = ? WHERE MovieID = ?;";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setInt(1, newRating);
+                statement.setInt(2,movieID);
+                statement.execute();
+
+                movies.stream().filter(m -> m.getId()== movieID).findFirst().ifPresent(value -> value.setRating(newRating));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 

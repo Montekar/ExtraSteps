@@ -5,6 +5,7 @@ import be.Movie;
 import gui.model.CategoryModel;
 import gui.model.MovieModel;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -16,6 +17,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.controlsfx.control.Rating;
 
 import java.awt.*;
 import java.net.URL;
@@ -37,8 +39,12 @@ public class MainController implements Initializable {
 
     @FXML
     private TableView<Category> categoryTable;
+
     @FXML
     private ChoiceBox<Category> choiceCategory;
+
+    @FXML
+    private Rating movieRating;
 
     private final MovieModel movieModel;
     private final CategoryModel categoryModel;
@@ -58,12 +64,6 @@ public class MainController implements Initializable {
         movieTable.setItems(movieModel.getObservableMovieList());
         choiceCategory.getSelectionModel().selectFirst();
         movieModel.setCategoryID(choiceCategory.getValue().getId());
-
-        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
-            if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
-                movieModel.setCategoryID(choiceCategory.getValue().getId());
-            }
-        });
 
         FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(), p -> true);
 
@@ -99,6 +99,28 @@ public class MainController implements Initializable {
         //displaying the data
         movieTable.setItems(sortedData);
 
+        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+            if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
+                movieModel.setCategoryID(choiceCategory.getValue().getId());
+            }
+        });
+        movieTable.setOnMousePressed(mouseEvent -> {
+            if (movieTable.getSelectionModel().getSelectedItem() != null) {
+                double rating = movieTable.getSelectionModel().getSelectedItem().getRating();
+                int index = movieTable.getSelectionModel().getSelectedIndex();
+                movieRating.setRating(rating);
+                movieTable.getSelectionModel().select(index);
+            }
+        });
+        movieRating.ratingProperty().addListener((observableValue, number, t1) -> {
+            if (movieTable.getSelectionModel().getSelectedItem() != null) {
+                int index = movieTable.getSelectionModel().getSelectedIndex();
+                int rating = (int) movieRating.getRating();
+                int movieID = movieTable.getSelectionModel().getSelectedItem().getId();
+                movieModel.setRating(rating, movieID);
+                movieTable.getSelectionModel().select(index);
+            }
+        });
     }
 
     /*

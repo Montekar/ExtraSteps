@@ -64,7 +64,7 @@ public class Edit {
 
     }
 
-    public static String[] editCategory(String title, String message, Category category) {
+    public static String[] editCategory(String title, String message, String oldName) {
         String[] categoryArr = new String[1];
 
         Stage window = new Stage();
@@ -79,7 +79,7 @@ public class Edit {
 
         Label label1 = new Label("Update the category");
         TextField categoryName = new TextField();
-        categoryName.setText(category.getName());
+        categoryName.setText(oldName);
 
         Button update = new Button("Update");
 

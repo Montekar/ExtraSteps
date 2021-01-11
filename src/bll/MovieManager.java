@@ -11,6 +11,10 @@ public class MovieManager {
 
     public MovieManager() {
         movieDAO = new MovieDAO();
+        loadAllCategories();
+    }
+
+    public void loadAllCategories() {
     }
 
     public void addMovie(String movieTitle, int movieYear, String filePath) {

@@ -61,8 +61,9 @@ public class MainController implements Initializable {
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
 
         choiceCategory.setItems(categoryModel.getObservableCategoryList());
-        movieTable.setItems(movieModel.getObservableMovieList());
         choiceCategory.getSelectionModel().selectFirst();
+
+        movieTable.setItems(movieModel.getObservableMovieList());
         movieModel.setCategoryID(choiceCategory.getValue().getId());
 
         FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(), p -> true);

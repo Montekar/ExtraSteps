@@ -33,6 +33,16 @@ public class MovieModel {
         updateObservableList();
     }
 
+    public void setRating(int newRating, int id){
+        movieManager.setRating(newRating, id);
+        updateObservableList();
+    }
+
+    public void setCategoryID(int selectedCategoryID) {
+        this.selectedCategoryID = selectedCategoryID;
+        updateObservableList();
+    }
+
     public void updateObservableList() {
         moviesOverview.clear();
         moviesOverview.addAll(movieManager.getCatMovies(selectedCategoryID));
@@ -40,10 +50,5 @@ public class MovieModel {
 
     public ObservableList<Movie> getObservableMovieList() {
         return moviesOverview;
-    }
-
-    public void setCategoryID(int selectedCategoryID) {
-        this.selectedCategoryID = selectedCategoryID;
-        updateObservableList();
     }
 }

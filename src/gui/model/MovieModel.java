@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class MovieModel {
 
+    public String getFilePath;
     private MovieManager movieManager;
     private ObservableList<Movie> moviesOverview;
     private int selectedCategoryID;

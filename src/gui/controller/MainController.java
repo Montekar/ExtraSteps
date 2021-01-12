@@ -16,7 +16,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.controlsfx.control.Rating;
 
 import java.awt.*;
 import java.io.IOException;
@@ -41,10 +40,9 @@ public class MainController implements Initializable {
     private TableColumn<Movie, String> colMovieLastView;
 
     @FXML
-    private ChoiceBox<Category> choiceCategory;
-
+    TableView<Category> categoryTable;
     @FXML
-    private Rating movieRating;
+    private ChoiceBox<Category> choiceCategory;
 
     private final MovieModel movieModel;
     private final CategoryModel categoryModel;
@@ -63,16 +61,20 @@ public class MainController implements Initializable {
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
         colMovieLastView.setCellValueFactory(movie -> movie.getValue().getLastViewProperty());
 
+        movieTable.setItems(movieModel.getObservableMovieList());
         choiceCategory.setItems(categoryModel.getObservableCategoryList());
         choiceCategory.getSelectionModel().selectFirst();
-
-        movieTable.setItems(movieModel.getObservableMovieList());
         movieModel.setCategoryID(choiceCategory.getValue().getId());
+        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+            movieModel.setCategoryID(choiceCategory.getValue().getId());
+        });
+
 
         FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(), p -> true);
 
         searchBar.textProperty().addListener(((observableValue, oldValue, newValue) -> {
             filteredData.setPredicate(movie -> {
+
                 //if filter is empty display all data
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
@@ -89,6 +91,7 @@ public class MainController implements Initializable {
                 } else if (String.valueOf(movie.getRating()).contains(newValLow)) {
                     return true;
                 }
+
                 return false;
             });
 
@@ -179,7 +182,6 @@ public class MainController implements Initializable {
         String[] result = Add.addCategory("Add Category", "Fill the fields to add new Category");
         if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
             categoryModel.addCategory(result[0]);
-            choiceCategory.getSelectionModel().selectLast();
         }
     }
 
@@ -187,17 +189,13 @@ public class MainController implements Initializable {
     Method to edit a Category
      */
     public void editCategory(ActionEvent actionEvent) {
-        if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
-            int index = choiceCategory.getSelectionModel().getSelectedIndex();
-            String catName = choiceCategory.getSelectionModel().getSelectedItem().getName();
-            int catID = choiceCategory.getSelectionModel().getSelectedItem().getId();
-
-            String[] result = Edit.editCategory("Edit Movie", "Edit the chosen Movie", catName);
+        if (categoryTable.getSelectionModel().getSelectedItem() != null) {
+            Category category = categoryTable.getSelectionModel().getSelectedItem();
+            String[] result = Edit.editCategory("Edit Movie", "Edit the chosen Movie", String.valueOf(category));
 
             if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-                Category category = new Category(result[0], catID);
+                category.setName(result[0]);
                 categoryModel.editCategory(category);
-                choiceCategory.getSelectionModel().select(index);
             }
         }
     }
@@ -206,10 +204,12 @@ public class MainController implements Initializable {
     Method to delete a Category
      */
     public void deleteCategory(ActionEvent actionEvent) {
-        if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
-            int selectedId = choiceCategory.getSelectionModel().getSelectedItem().getId();
+        if (categoryTable.getSelectionModel().getSelectedItem() != null) {
+            int selectedId = categoryTable.getSelectionModel().getSelectedItem().getId();
+
             categoryModel.deleteCategory(selectedId);
-            choiceCategory.getSelectionModel().selectFirst();
+
+            categoryTable.setItems(categoryModel.getObservableCategoryList());
         }
     }
 
@@ -223,4 +223,34 @@ public class MainController implements Initializable {
             ioException.printStackTrace();
         }
     }
+
+    /*
+    Opens a MediaPlayer and play's movie
+     */
+    public void playMovie(ActionEvent actionEvent) {
+        String moviePath = null;
+        if (movieTable.getSelectionModel().getSelectedItem() != null) {
+            //assigns the file path
+            moviePath = movieTable.getSelectionModel().getSelectedItem().getFilePath();
+            //check if the file path exists
+            File file = new File( moviePath );
+            boolean exists = file.canExecute();
+            if (exists) {
+                Runtime runtime = Runtime.getRuntime();
+                try {
+                    System.out.println(moviePath);
+                    //adjust to personal media player to make it work
+                    String[] command = {"C:\\Program Files (x86)\\Windows Media Player\\wmplayer", "" + moviePath + ""};
+                    runtime.exec(command);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Alert.displayAlert("Movie not found", "Selected movie was not found. Check your file path.");
+            }
+        }
+
+
+    }
 }
+

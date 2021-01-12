@@ -16,8 +16,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.controlsfx.control.Rating;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -43,6 +45,8 @@ public class MainController implements Initializable {
     TableView<Category> categoryTable;
     @FXML
     private ChoiceBox<Category> choiceCategory;
+    @FXML
+    private Rating movieRating;
 
     private final MovieModel movieModel;
     private final CategoryModel categoryModel;
@@ -117,7 +121,7 @@ public class MainController implements Initializable {
                 Movie movie = movieTable.getSelectionModel().getSelectedItem();
                 double rating = movie.getRating();
                 movieRating.setRating(rating);
-                movieTable.getSelectionModel().select(index);
+
 
                 if(mouseEvent.getClickCount() == 2){
                     if(moviePlayerManager.isWatchable(movie)) {
@@ -125,6 +129,7 @@ public class MainController implements Initializable {
                         movieModel.updateLastView(movie.getId());
                     }
                 }
+                movieTable.getSelectionModel().select(index);
             }
         });
         movieRating.ratingProperty().addListener((observableValue, number, t1) -> {
@@ -224,33 +229,5 @@ public class MainController implements Initializable {
         }
     }
 
-    /*
-    Opens a MediaPlayer and play's movie
-     */
-    public void playMovie(ActionEvent actionEvent) {
-        String moviePath = null;
-        if (movieTable.getSelectionModel().getSelectedItem() != null) {
-            //assigns the file path
-            moviePath = movieTable.getSelectionModel().getSelectedItem().getFilePath();
-            //check if the file path exists
-            File file = new File( moviePath );
-            boolean exists = file.canExecute();
-            if (exists) {
-                Runtime runtime = Runtime.getRuntime();
-                try {
-                    System.out.println(moviePath);
-                    //adjust to personal media player to make it work
-                    String[] command = {"C:\\Program Files (x86)\\Windows Media Player\\wmplayer", "" + moviePath + ""};
-                    runtime.exec(command);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                Alert.displayAlert("Movie not found", "Selected movie was not found. Check your file path.");
-            }
-        }
-
-
-    }
 }
 

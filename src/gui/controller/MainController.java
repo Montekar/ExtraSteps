@@ -2,6 +2,7 @@ package gui.controller;
 
 import be.Category;
 import be.Movie;
+import bll.MoviePlayerManager;
 import gui.model.CategoryModel;
 import gui.model.MovieModel;
 
@@ -19,10 +20,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.controlsfx.control.Rating;
 import javafx.application.Platform;
+import org.controlsfx.control.Rating;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -45,6 +48,8 @@ public class MainController implements Initializable {
     TableView<Category> categoryTable;
     @FXML
     private ChoiceBox<Category> choiceCategory;
+    @FXML
+    private Rating movieRating;
 
     @FXML
     private Rating movieRating;
@@ -55,6 +60,7 @@ public class MainController implements Initializable {
     public MainController() {
         movieModel = new MovieModel();
         categoryModel = new CategoryModel();
+        moviePlayerManager = new MoviePlayerManager();
     }
 
     @Override
@@ -62,6 +68,7 @@ public class MainController implements Initializable {
         colMovieTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
+        colMovieLastView.setCellValueFactory(movie -> movie.getValue().getLastViewProperty());
 
         movieTable.setItems(movieModel.getObservableMovieList());
         choiceCategory.setItems(categoryModel.getObservableCategoryList());
@@ -136,8 +143,6 @@ public class MainController implements Initializable {
     /*
     Method to add a movie to the database
      */
-    //TODO: finish adding categories to the specific film (tip: adjust add movie that will also send the list of categories and based on the id it will
-    // create neccesary links to catMovie)
     public void addMovie(ActionEvent actionEvent) {
         String[] result = Add.addMovie("Add Movie", "Fill the fields to add new Movie");
         if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
@@ -248,6 +253,5 @@ public class MainController implements Initializable {
 
 
     }
-
 }
 

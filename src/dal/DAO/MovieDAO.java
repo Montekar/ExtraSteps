@@ -37,6 +37,7 @@ public class MovieDAO {
                             rs.getString("Link"),
                             rs.getInt("Rating"));
                     movie.setCategories(getCategories(movie.getId()));
+                    movie.setLastView(rs.getString("LastView"));
                     tempMovies.add(movie);
                 }
             }
@@ -102,16 +103,30 @@ public class MovieDAO {
         }
     }
 
-    public void setRating(int newRating, int movieID){
-        if(newRating<11 && newRating>0) {
+    public void updateLastView(int movieID, String timeStamp) {
+        try (Connection connection = connector.getConnection();) {
+            String sql = "UPDATE Movie SET LastView = ? WHERE MovieID = ?;";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, timeStamp);
+            statement.setInt(2, movieID);
+            statement.execute();
+
+            movies.stream().filter(m -> m.getId() == movieID).findFirst().ifPresent(value -> value.setLastView(timeStamp));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void setRating(int newRating, int movieID) {
+        if (newRating < 11 && newRating > 0) {
             try (Connection connection = connector.getConnection();) {
                 String sql = "UPDATE Movie SET Rating = ? WHERE MovieID = ?;";
                 PreparedStatement statement = connection.prepareStatement(sql);
                 statement.setInt(1, newRating);
-                statement.setInt(2,movieID);
+                statement.setInt(2, movieID);
                 statement.execute();
 
-                movies.stream().filter(m -> m.getId()== movieID).findFirst().ifPresent(value -> value.setRating(newRating));
+                movies.stream().filter(m -> m.getId() == movieID).findFirst().ifPresent(value -> value.setRating(newRating));
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }

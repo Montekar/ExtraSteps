@@ -1,10 +1,11 @@
 package bll;
 
-import be.Category;
 import be.Movie;
 import dal.DAO.MovieDAO;
-import javafx.collections.ObservableList;
+import gui.controller.Alert;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,12 @@ public class MovieManager {
     }
 
     public void addMovie(String movieTitle, int movieYear, String filePath) {
-        movieDAO.addMovie(movieTitle, movieYear, filePath);
+        boolean noTitleMatch = getMovies().stream().noneMatch(o -> o.getTitle().toLowerCase().equals(movieTitle.toLowerCase()));
+        if(noTitleMatch) {
+            movieDAO.addMovie(movieTitle, movieYear, filePath);
+        }else{
+            Alert.displayAlert("Adding Error","Movie Could not be added! Please choose a different title!");
+        }
     }
 
     public void editMovie(Movie movie) {
@@ -46,7 +52,8 @@ public class MovieManager {
         return movieDAO.getMovies().stream().filter(x -> x.getCategories().stream().anyMatch(s -> s.getId() == selectedCategoryID)).collect(Collectors.toList());
     }
 
-    public void addCatMovie(ObservableList<Category> selectedItems) {
-        movieDAO.addCatMovie(selectedItems);
+    public void updateLastView(int movieID) {
+        String timeStamp = new SimpleDateFormat("yyyy/MM/dd - HH:mm").format(Calendar.getInstance().getTime());
+        movieDAO.updateLastView(movieID,timeStamp);
     }
 }

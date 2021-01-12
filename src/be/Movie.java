@@ -15,7 +15,7 @@ public class Movie {
 
     private int id;
 
-    public Movie(String title, int id, int year, String filePath,int rating) {
+    public Movie(String title, int id, int year, String filePath, int rating) {
         this.title = title;
         this.id = id;
         this.year = year;
@@ -61,11 +61,19 @@ public class Movie {
     public int getRating() {
         return rating;
     }
-    public SimpleObjectProperty<String> getRatingProperty(){
-        if(rating==0){
+
+    public SimpleObjectProperty<String> getRatingProperty() {
+        if (rating == 0) {
             return new SimpleObjectProperty<>("No rating");
         }
-        return new SimpleObjectProperty<>(String.valueOf(rating)+ " Stars");
+        return new SimpleObjectProperty<>(String.valueOf(rating) + " Stars");
+    }
+
+    public SimpleObjectProperty<String> getLastViewProperty() {
+        if (lastView == "NULL" || lastView == null) {
+            return new SimpleObjectProperty<>("Not watched");
+        }
+        return new SimpleObjectProperty<>(lastView);
     }
 
     public String getTitle() {
@@ -94,7 +102,7 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "rating= " + rating+" " + "year= " + year+" " + "title= " + title+" " + "filePath= " + filePath+" " + "lastView= " + lastView+" " + "id= " + id+" " + "\n";
+        return "rating= " + rating + " " + "year= " + year + " " + "title= " + title + " " + "filePath= " + filePath + " " + "lastView= " + lastView + " " + "id= " + id + " " + "\n";
     }
 }
 

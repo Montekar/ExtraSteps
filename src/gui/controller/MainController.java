@@ -2,11 +2,10 @@ package gui.controller;
 
 import be.Category;
 import be.Movie;
+import bll.MoviePlayerManager;
 import gui.model.CategoryModel;
 import gui.model.MovieModel;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -21,7 +20,11 @@ import org.controlsfx.control.Rating;
 
 import java.awt.*;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -36,9 +39,8 @@ public class MainController implements Initializable {
     private TableColumn<Movie, Integer> colMovieYear;
     @FXML
     private TableColumn<Movie, String> colMovieRating;
-
     @FXML
-    private TableView<Category> categoryTable;
+    private TableColumn<Movie, String> colMovieLastView;
 
     @FXML
     private ChoiceBox<Category> choiceCategory;
@@ -48,10 +50,12 @@ public class MainController implements Initializable {
 
     private final MovieModel movieModel;
     private final CategoryModel categoryModel;
+    private static MoviePlayerManager moviePlayerManager;
 
     public MainController() {
         movieModel = new MovieModel();
         categoryModel = new CategoryModel();
+        moviePlayerManager = new MoviePlayerManager();
     }
 
     @Override
@@ -59,6 +63,7 @@ public class MainController implements Initializable {
         colMovieTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
+        colMovieLastView.setCellValueFactory(movie -> movie.getValue().getLastViewProperty());
 
         choiceCategory.setItems(categoryModel.getObservableCategoryList());
         choiceCategory.getSelectionModel().selectFirst();
@@ -107,10 +112,18 @@ public class MainController implements Initializable {
         });
         movieTable.setOnMousePressed(mouseEvent -> {
             if (movieTable.getSelectionModel().getSelectedItem() != null) {
-                double rating = movieTable.getSelectionModel().getSelectedItem().getRating();
                 int index = movieTable.getSelectionModel().getSelectedIndex();
+                Movie movie = movieTable.getSelectionModel().getSelectedItem();
+                double rating = movie.getRating();
                 movieRating.setRating(rating);
                 movieTable.getSelectionModel().select(index);
+
+                if(mouseEvent.getClickCount() == 2){
+                    if(moviePlayerManager.isWatchable(movie)) {
+                        moviePlayerManager.playMovie(movie);
+                        movieModel.updateLastView(movie.getId());
+                    }
+                }
             }
         });
         movieRating.ratingProperty().addListener((observableValue, number, t1) -> {

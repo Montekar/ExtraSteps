@@ -38,6 +38,11 @@ public class MovieModel {
         updateObservableList();
     }
 
+    public void updateLastView(int movieID){
+        movieManager.updateLastView(movieID);
+        updateObservableList();
+    }
+
     public void setCategoryID(int selectedCategoryID) {
         this.selectedCategoryID = selectedCategoryID;
         updateObservableList();

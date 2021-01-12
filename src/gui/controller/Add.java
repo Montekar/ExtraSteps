@@ -58,7 +58,9 @@ public class Add {
 
             if(response == fileChooser.APPROVE_OPTION){
                 String path = fileChooser.getSelectedFile().getPath().replace('\\','/');
-                movieFile.setText(path);
+                if(path.endsWith(".mp4")||path.endsWith(".mpeg4")) {
+                    movieFile.setText(path);
+                }
             }
         });
 

@@ -2,6 +2,7 @@ package bll;
 
 import be.Movie;
 import dal.DAO.MovieDAO;
+import gui.controller.Alert;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,7 +21,12 @@ public class MovieManager {
     }
 
     public void addMovie(String movieTitle, int movieYear, String filePath) {
-        movieDAO.addMovie(movieTitle, movieYear, filePath);
+        boolean noTitleMatch = getMovies().stream().noneMatch(o -> o.getTitle().toLowerCase().equals(movieTitle.toLowerCase()));
+        if(noTitleMatch) {
+            movieDAO.addMovie(movieTitle, movieYear, filePath);
+        }else{
+            Alert.displayAlert("Adding Error","Movie Could not be added! Please choose a different title!");
+        }
     }
 
     public void editMovie(Movie movie) {

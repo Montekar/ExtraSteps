@@ -38,4 +38,5 @@ public class CategoryModel {
     public ObservableList<Category> getObservableCategoryList() {
         return categoriesOverview;
     }
+
 }

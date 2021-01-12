@@ -1,5 +1,6 @@
 package gui.model;
 
+import be.Category;
 import be.Movie;
 import bll.MovieManager;
 import javafx.collections.FXCollections;
@@ -51,5 +52,9 @@ public class MovieModel {
 
     public ObservableList<Movie> getObservableMovieList() {
         return moviesOverview;
+    }
+
+    public void addCatMovie(ObservableList<Category> selectedItems) {
+        movieManager.addCatMovie(selectedItems);
     }
 }

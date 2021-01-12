@@ -97,3 +97,4 @@ public class Movie {
         return "rating= " + rating+" " + "year= " + year+" " + "title= " + title+" " + "filePath= " + filePath+" " + "lastView= " + lastView+" " + "id= " + id+" " + "\n";
     }
 }
+

@@ -1,7 +1,9 @@
 package bll;
 
+import be.Category;
 import be.Movie;
 import dal.DAO.MovieDAO;
+import javafx.collections.ObservableList;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,5 +44,9 @@ public class MovieManager {
             return getMovies();
         }
         return movieDAO.getMovies().stream().filter(x -> x.getCategories().stream().anyMatch(s -> s.getId() == selectedCategoryID)).collect(Collectors.toList());
+    }
+
+    public void addCatMovie(ObservableList<Category> selectedItems) {
+        movieDAO.addCatMovie(selectedItems);
     }
 }

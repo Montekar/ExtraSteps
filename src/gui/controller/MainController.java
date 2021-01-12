@@ -6,6 +6,7 @@ import gui.model.CategoryModel;
 import gui.model.MovieModel;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -16,6 +17,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.controlsfx.control.Rating;
+import javafx.application.Platform;
 
 import java.awt.*;
 import java.io.File;
@@ -42,6 +45,9 @@ public class MainController implements Initializable {
     TableView<Category> categoryTable;
     @FXML
     private ChoiceBox<Category> choiceCategory;
+
+    @FXML
+    private Rating movieRating;
 
     MovieModel movieModel;
     CategoryModel categoryModel;
@@ -102,11 +108,36 @@ public class MainController implements Initializable {
         //displaying the data
         movieTable.setItems(sortedData);
 
+        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+            if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
+                movieModel.setCategoryID(choiceCategory.getValue().getId());
+            }
+        });
+        movieTable.setOnMousePressed(mouseEvent -> {
+            if (movieTable.getSelectionModel().getSelectedItem() != null) {
+                double rating = movieTable.getSelectionModel().getSelectedItem().getRating();
+                int index = movieTable.getSelectionModel().getSelectedIndex();
+                movieRating.setRating(rating);
+                movieTable.getSelectionModel().select(index);
+            }
+        });
+        movieRating.ratingProperty().addListener((observableValue, number, t1) -> {
+            if (movieTable.getSelectionModel().getSelectedItem() != null) {
+                int index = movieTable.getSelectionModel().getSelectedIndex();
+                int rating = (int) movieRating.getRating();
+                int movieID = movieTable.getSelectionModel().getSelectedItem().getId();
+                movieModel.setRating(rating, movieID);
+                movieTable.getSelectionModel().select(index);
+            }
+        });
+
     }
 
     /*
     Method to add a movie to the database
      */
+    //TODO: finish adding categories to the specific film (tip: adjust add movie that will also send the list of categories and based on the id it will
+    // create neccesary links to catMovie)
     public void addMovie(ActionEvent actionEvent) {
         String[] result = Add.addMovie("Add Movie", "Fill the fields to add new Movie");
         if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
@@ -217,5 +248,6 @@ public class MainController implements Initializable {
 
 
     }
+
 }
 

@@ -9,10 +9,10 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.microsoft.sqlserver:mssql-jdbc:8.2.0.jre13" level="project" />
     <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="mssql-jdbc-8.4.1.jre14" level="project" />
     <orderEntry type="library" name="com.microsoft.sqlserver.msi:msi-mssql-jdbc:2.0.3" level="project" />
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="com.microsoft.sqlserver:mssql-jdbc:6.4.0.jre9" level="project" />
+    <orderEntry type="library" name="mssql-jdbc-8.4.1.jre14" level="project" />
     <orderEntry type="library" name="controlsfx-11.0.3" level="project" />
   </component>
 </module>

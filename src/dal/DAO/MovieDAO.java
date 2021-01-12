@@ -4,6 +4,7 @@ import be.Category;
 import be.Movie;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dal.DBConnection;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -133,4 +134,10 @@ public class MovieDAO {
     public List<Movie> getMovies() {
         return movies;
     }
+
+
+
+
+
+
 }

@@ -19,12 +19,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.controlsfx.control.Rating;
 
 import java.awt.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -221,7 +219,8 @@ public class MainController implements Initializable {
     public void goTo(ActionEvent actionEvent) {
         try {
             Desktop.getDesktop().browse(new URL("https://www.imdb.com/").toURI());
-        } catch (Exception e) {
+        } catch (IOException | URISyntaxException ioException) {
+            ioException.printStackTrace();
         }
     }
 }

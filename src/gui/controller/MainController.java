@@ -2,10 +2,10 @@ package gui.controller;
 
 import be.Category;
 import be.Movie;
+import bll.MoviePlayerManager;
 import gui.model.CategoryModel;
 import gui.model.MovieModel;
 
-import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -18,8 +18,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -36,19 +36,22 @@ public class MainController implements Initializable {
     private TableColumn<Movie, Integer> colMovieYear;
     @FXML
     private TableColumn<Movie, String> colMovieRating;
-
+    @FXML
+    private TableColumn<Movie, String> colMovieLastView;
 
     @FXML
     TableView<Category> categoryTable;
     @FXML
     private ChoiceBox<Category> choiceCategory;
 
-    MovieModel movieModel;
-    CategoryModel categoryModel;
+    private final MovieModel movieModel;
+    private final CategoryModel categoryModel;
+    private static MoviePlayerManager moviePlayerManager;
 
     public MainController() {
         movieModel = new MovieModel();
         categoryModel = new CategoryModel();
+        moviePlayerManager = new MoviePlayerManager();
     }
 
     @Override
@@ -56,6 +59,7 @@ public class MainController implements Initializable {
         colMovieTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
+        colMovieLastView.setCellValueFactory(movie -> movie.getValue().getLastViewProperty());
 
         movieTable.setItems(movieModel.getObservableMovieList());
         choiceCategory.setItems(categoryModel.getObservableCategoryList());
@@ -102,6 +106,36 @@ public class MainController implements Initializable {
         //displaying the data
         movieTable.setItems(sortedData);
 
+        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+            if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
+                movieModel.setCategoryID(choiceCategory.getValue().getId());
+            }
+        });
+        movieTable.setOnMousePressed(mouseEvent -> {
+            if (movieTable.getSelectionModel().getSelectedItem() != null) {
+                int index = movieTable.getSelectionModel().getSelectedIndex();
+                Movie movie = movieTable.getSelectionModel().getSelectedItem();
+                double rating = movie.getRating();
+                movieRating.setRating(rating);
+                movieTable.getSelectionModel().select(index);
+
+                if(mouseEvent.getClickCount() == 2){
+                    if(moviePlayerManager.isWatchable(movie)) {
+                        moviePlayerManager.playMovie(movie);
+                        movieModel.updateLastView(movie.getId());
+                    }
+                }
+            }
+        });
+        movieRating.ratingProperty().addListener((observableValue, number, t1) -> {
+            if (movieTable.getSelectionModel().getSelectedItem() != null) {
+                int index = movieTable.getSelectionModel().getSelectedIndex();
+                int rating = (int) movieRating.getRating();
+                int movieID = movieTable.getSelectionModel().getSelectedItem().getId();
+                movieModel.setRating(rating, movieID);
+                movieTable.getSelectionModel().select(index);
+            }
+        });
     }
 
     /*
@@ -185,7 +219,8 @@ public class MainController implements Initializable {
     public void goTo(ActionEvent actionEvent) {
         try {
             Desktop.getDesktop().browse(new URL("https://www.imdb.com/").toURI());
-        } catch (Exception e) {
+        } catch (IOException | URISyntaxException ioException) {
+            ioException.printStackTrace();
         }
     }
 

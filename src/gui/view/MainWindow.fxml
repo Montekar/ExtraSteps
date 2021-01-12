@@ -48,9 +48,10 @@
       </MenuBar>
       <TableView fx:id="movieTable" layoutX="-1.0" layoutY="159.0" prefHeight="295.0" prefWidth="572.0">
         <columns>
-          <TableColumn fx:id="colMovieTitle" prefWidth="304.80003052949905" text="Title" />
-          <TableColumn fx:id="colMovieYear" prefWidth="131.199951171875" text="Year" />
-            <TableColumn fx:id="colMovieRating" prefWidth="136.79994201660156" text="Rating" />
+          <TableColumn fx:id="colMovieTitle" prefWidth="190.3999878168106" text="Title" />
+          <TableColumn fx:id="colMovieYear" prefWidth="91.20001220703125" text="Year" />
+            <TableColumn fx:id="colMovieRating" prefWidth="112.0" text="Rating" />
+            <TableColumn fx:id="colMovieLastView" prefWidth="176.80001831054688" text="Last View" />
         </columns>
       </TableView>
       <ChoiceBox fx:id="choiceCategory" layoutX="416.0" layoutY="13.0" prefHeight="26.0" prefWidth="147.0" />

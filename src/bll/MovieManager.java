@@ -3,6 +3,8 @@ package bll;
 import be.Movie;
 import dal.DAO.MovieDAO;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,5 +44,10 @@ public class MovieManager {
             return getMovies();
         }
         return movieDAO.getMovies().stream().filter(x -> x.getCategories().stream().anyMatch(s -> s.getId() == selectedCategoryID)).collect(Collectors.toList());
+    }
+
+    public void updateLastView(int movieID) {
+        String timeStamp = new SimpleDateFormat("yyyy/MM/dd - HH:mm").format(Calendar.getInstance().getTime());
+        movieDAO.updateLastView(movieID,timeStamp);
     }
 }

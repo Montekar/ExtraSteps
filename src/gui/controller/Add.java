@@ -1,12 +1,15 @@
 package gui.controller;
 
+import be.Category;
+import be.Movie;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -14,41 +17,68 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Add {
 
-    public static String[] addMovie(String title, String message) {
-        String[] movie = new String[4];
+    public static Movie addMovie(ObservableList<Category> observableCategoryList) {
+        AtomicReference<Movie> editedMovie = new AtomicReference<>();
+
+        ObservableList<Category> movieCategories = FXCollections.observableArrayList();
+
+        FilteredList<Category> filteredData = new FilteredList<>(observableCategoryList, p -> true);
+        filteredData.setPredicate(category -> {
+            return movieCategories.stream().noneMatch(c -> c.getId() == category.getId());
+        });
+        SortedList<Category> allCategores = new SortedList<>(filteredData);
+
         Stage window = new Stage();
-        //blocking other windows usage if this window is open
+
         window.initModality(Modality.APPLICATION_MODAL);
 
-        window.setTitle(title);
+        window.setTitle("Add Movie");
 
         Label label = new Label();
-        label.setText(message);
+        label.setText("Add Movie");
 
         //two buttons
 
-        Label label1 = new Label("Enter the movie name");
+        Label label1 = new Label("Movie title");
         TextField movieTitle = new TextField();
-        Label label2 = new Label("Enter the movie year");
+
+        Label label2 = new Label("Movie year");
         TextField movieYear = new TextField();
-        Label label5 = new Label("Select the movie location");
+
+        HBox fileHbox = new HBox();
         TextField movieFile = new TextField();
         Button btnSelection = new Button("Find Location");
         movieFile.setEditable(false);
+        fileHbox.getChildren().addAll(movieFile, btnSelection);
+        fileHbox.setAlignment(Pos.CENTER);
+        fileHbox.setPadding(new Insets(15, 15, 15, 15));
+        fileHbox.setSpacing(15);
+//category selection
+        HBox hBox = new HBox();
 
-        Button add = new Button("Add movie");
+        VBox vbox1 = new VBox();
+        vbox1.setAlignment(Pos.CENTER);
+        Label allCategoryLabel = new Label("Available categories");
+        ListView<Category> availableCategoryList = new ListView<>();
+        availableCategoryList.setItems(allCategores);
+        vbox1.getChildren().addAll(allCategoryLabel, availableCategoryList);
 
-        add.setOnAction(e -> {
-            if (!movieTitle.getText().isEmpty() && !movieYear.getText().isEmpty() && !movieFile.getText().isEmpty()) {
-                movie[0] = movieTitle.getText();
-                movie[1] = movieYear.getText();
-                movie[2] = movieFile.getText();
-                window.close();
-            } else {
-                gui.controller.Alert.displayAlert("Alert", "You need to fill all the fields to add new movie!!!");
+        VBox vbox2 = new VBox();
+        vbox2.setAlignment(Pos.CENTER);
+        Button addCategory = new Button();
+        addCategory.setText("Add Category");
+
+        addCategory.setOnMouseClicked(mouseEvent -> {
+            if (availableCategoryList.getSelectionModel().getSelectedItem() != null) {
+                movieCategories.add(availableCategoryList.getSelectionModel().getSelectedItem());
+
+                filteredData.setPredicate(category -> {
+                    return movieCategories.stream().noneMatch(c -> c.getId() == category.getId());
+                });
             }
         });
 
@@ -56,57 +86,99 @@ public class Add {
             JFileChooser fileChooser = new JFileChooser();
             int response = fileChooser.showOpenDialog(null);
 
-            if(response == fileChooser.APPROVE_OPTION){
-                String path = fileChooser.getSelectedFile().getPath().replace('\\','/');
-                if(path.endsWith(".mp4")||path.endsWith(".mpeg4")) {
+            if (response == fileChooser.APPROVE_OPTION) {
+                String path = fileChooser.getSelectedFile().getPath().replace('\\', '/');
+                if (path.endsWith(".mp4") || path.endsWith(".mpeg4")) {
                     movieFile.setText(path);
                 }
             }
         });
 
-        HBox movieFileLayout = new HBox();
-        movieFileLayout.getChildren().addAll(movieFile,btnSelection);
-        movieFileLayout.setAlignment(Pos.CENTER);
-        movieFileLayout.setSpacing(15);
+        Button removeCategory = new Button();
+        removeCategory.setText("Remove Category");
+
+        vbox2.setPadding(new Insets(15, 15, 15, 15));
+        vbox2.setSpacing(15);
+
+        vbox2.getChildren().addAll(addCategory, removeCategory);
+
+
+        VBox vBox3 = new VBox();
+        vBox3.setAlignment(Pos.CENTER);
+        Label currentCategoryLabel = new Label("Movie categories");
+        ListView<Category> currentMovies = new ListView<>();
+        currentMovies.setItems(movieCategories);
+
+        removeCategory.setOnMouseClicked(mouseEvent -> {
+            if (currentMovies.getSelectionModel().getSelectedItem() != null) {
+                currentMovies.getItems().remove(currentMovies.getSelectionModel().getSelectedItem());
+
+                filteredData.setPredicate(category -> {
+                    return movieCategories.stream().noneMatch(c -> c.getId() == category.getId());
+                });
+            }
+        });
+
+        vBox3.getChildren().addAll(currentCategoryLabel, currentMovies);
+
+        hBox.getChildren().addAll(vbox1, vbox2, vBox3);
+
+        Button update = new Button("Add Movie");
+
+        update.setOnMouseClicked(e -> {
+            if (movieTitle.getText().isEmpty()) {
+                gui.controller.Alert.displayAlert("Invalid details", "Please enter title!");
+            } else if (movieYear.getText().isEmpty()) {
+                gui.controller.Alert.displayAlert("Invalid details", "Please enter year!");
+            } else if (movieFile.getText().isEmpty()) {
+                gui.controller.Alert.displayAlert("Invalid details", "Please add file location!");
+            } else if(currentMovies.getItems().size()<1){
+                Alert.displayAlert("Invalid details", "Please add at least 1 category!");
+            }else{
+                editedMovie.set(new Movie(movieTitle.getText(), -1, Integer.parseInt(movieYear.getText()), movieFile.getText(), 0));
+                editedMovie.get().setCategories(movieCategories);
+                window.close();
+            }
+        });
 
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(15, 15, 15, 15));
-        layout.getChildren().addAll(label, label1, movieTitle, label2, movieYear, label5, movieFileLayout, add);
+        layout.getChildren().addAll(label, label1, movieTitle, label2, movieYear, fileHbox, hBox, update);
         layout.setAlignment(Pos.CENTER);
+
 
         Scene scene = new Scene(layout);
 
         window.setScene(scene);
         window.showAndWait();
 
-        return movie;
+        return editedMovie.get();
     }
 
-    public static String[] addCategory(String title, String message) {
-        String[] category = new String[1];
+    public static String addCategory() {
+        AtomicReference<String> tempCategoryName = new AtomicReference<>();
         Stage window = new Stage();
         //blocking other windows usage if this window is open
         window.initModality(Modality.APPLICATION_MODAL);
 
-        window.setTitle(title);
+        window.setTitle("Add Category");
 
         Label label = new Label();
-        label.setText(message);
+        label.setText("Add Category");
 
         Label label1 = new Label("Enter the new Category");
         TextField categoryName = new TextField();
 
         Button add = new Button("Add Category");
 
-        add.setOnAction(e -> {
-            if (!categoryName.getText().isEmpty()) {
-                category[0] = categoryName.getText();
-                window.close();
+        add.setOnMouseClicked(mouseEvent -> {
+            if (categoryName.getText().isEmpty()) {
+                Alert.displayAlert("Invalid details", "Please enter category name!");
             } else {
-                gui.controller.Alert.displayAlert("Alert", "You need to fill all the fields to add new category!!!");
+                tempCategoryName.set(categoryName.getText());
+                window.close();
             }
         });
-
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(15, 15, 15, 15));
         layout.getChildren().addAll(label, label1, categoryName, add);
@@ -117,6 +189,6 @@ public class Add {
         window.setScene(scene);
         window.showAndWait();
 
-        return category;
-    }
+        return tempCategoryName.get();
+}
 }

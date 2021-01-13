@@ -12,7 +12,6 @@ public class Movie {
     private int rating;
     private int year;
     private List<Category> categories;
-
     private int id;
 
     public Movie(String title, int id, int year, String filePath, int rating) {

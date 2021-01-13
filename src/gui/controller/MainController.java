@@ -19,7 +19,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.controlsfx.control.Rating;
 
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -41,8 +40,6 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Movie, String> colMovieLastView;
 
-    @FXML
-    TableView<Category> categoryTable;
     @FXML
     private ChoiceBox<Category> choiceCategory;
     @FXML
@@ -70,7 +67,9 @@ public class MainController implements Initializable {
         choiceCategory.getSelectionModel().selectFirst();
         movieModel.setCategoryID(choiceCategory.getValue().getId());
         choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
-            movieModel.setCategoryID(choiceCategory.getValue().getId());
+            if(choiceCategory.getSelectionModel().getSelectedItem()!=null) {
+                movieModel.setCategoryID(choiceCategory.getValue().getId());
+            }
         });
 
 
@@ -123,8 +122,8 @@ public class MainController implements Initializable {
                 movieRating.setRating(rating);
 
 
-                if(mouseEvent.getClickCount() == 2){
-                    if(moviePlayerManager.isWatchable(movie)) {
+                if (mouseEvent.getClickCount() == 2) {
+                    if (moviePlayerManager.isWatchable(movie)) {
                         moviePlayerManager.playMovie(movie);
                         movieModel.updateLastView(movie.getId());
                     }
@@ -147,9 +146,9 @@ public class MainController implements Initializable {
     Method to add a movie to the database
      */
     public void addMovie(ActionEvent actionEvent) {
-        String[] result = Add.addMovie("Add Movie", "Fill the fields to add new Movie");
-        if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-            movieModel.addMovie(result[0], Integer.parseInt(result[1]), result[2]);
+        Movie tempMovie = Add.addMovie(categoryModel.getObservableCategoryList());
+        if (tempMovie != null) {
+            movieModel.addMovie(tempMovie.getTitle(), tempMovie.getYear(), tempMovie.getFilePath(), tempMovie.getCategories());
         }
     }
 
@@ -159,12 +158,11 @@ public class MainController implements Initializable {
     public void editMovie(ActionEvent actionEvent) {
         if (movieTable.getSelectionModel().getSelectedItem() != null) {
             Movie movie = movieTable.getSelectionModel().getSelectedItem();
-            String[] result = Edit.editMovie("Edit Movie", "Edit the chosen Movie", movie);
 
-            if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-                movie.setTitle(result[0]);
-                movie.setYear(Integer.parseInt(result[1]));
-                movieModel.editMovie(movie);
+            Movie tempMovie = Edit.editMovie(movie, categoryModel.getObservableCategoryList());
+
+            if (tempMovie != null) {
+                movieModel.editMovie(tempMovie);
             }
         }
     }
@@ -175,7 +173,6 @@ public class MainController implements Initializable {
     public void deleteMovie(ActionEvent actionEvent) {
         if (movieTable.getSelectionModel().getSelectedItem() != null) {
             int selectedId = movieTable.getSelectionModel().getSelectedItem().getId();
-
             movieModel.deleteMovie(selectedId);
         }
     }
@@ -184,23 +181,24 @@ public class MainController implements Initializable {
     Method to add a Category
      */
     public void addCategory(ActionEvent actionEvent) {
-        String[] result = Add.addCategory("Add Category", "Fill the fields to add new Category");
-        if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-            categoryModel.addCategory(result[0]);
-        }
+            categoryModel.addCategory(Add.addCategory());
+            choiceCategory.getSelectionModel().selectFirst();
     }
 
     /*
     Method to edit a Category
      */
     public void editCategory(ActionEvent actionEvent) {
-        if (categoryTable.getSelectionModel().getSelectedItem() != null) {
-            Category category = categoryTable.getSelectionModel().getSelectedItem();
-            String[] result = Edit.editCategory("Edit Movie", "Edit the chosen Movie", String.valueOf(category));
+        if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
+            int index = choiceCategory.getSelectionModel().getSelectedIndex();
+            Category category = choiceCategory.getSelectionModel().getSelectedItem();
+            Category tempCategory = Edit.editCategory(category);
+            if (tempCategory != null) {
+                categoryModel.editCategory(tempCategory);
+                movieModel.updateAllMovies();
+                choiceCategory.getSelectionModel().select(index);
+                movieModel.setCategoryID(tempCategory.getId());
 
-            if (Arrays.stream(result).anyMatch(e -> e != null && !e.isEmpty())) {
-                category.setName(result[0]);
-                categoryModel.editCategory(category);
             }
         }
     }
@@ -209,12 +207,11 @@ public class MainController implements Initializable {
     Method to delete a Category
      */
     public void deleteCategory(ActionEvent actionEvent) {
-        if (categoryTable.getSelectionModel().getSelectedItem() != null) {
-            int selectedId = categoryTable.getSelectionModel().getSelectedItem().getId();
-
+        if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
+            int selectedId = choiceCategory.getSelectionModel().getSelectedItem().getId();
             categoryModel.deleteCategory(selectedId);
-
-            categoryTable.setItems(categoryModel.getObservableCategoryList());
+            movieModel.updateAllMovies();
+            choiceCategory.getSelectionModel().selectFirst();
         }
     }
 

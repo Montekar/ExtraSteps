@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MovieDAO {
     private DBConnection connector;
@@ -17,10 +18,10 @@ public class MovieDAO {
     public MovieDAO() {
         connector = new DBConnection();
 
-        loadAllMovies();
+        updateAllMovies();
     }
 
-    public void loadAllMovies() {
+    public void updateAllMovies() {
         List<Movie> tempMovies = new ArrayList<>();
         try (Connection connection = connector.getConnection()) {
             String sql = "SELECT * FROM Movie";
@@ -46,6 +47,38 @@ public class MovieDAO {
         movies = tempMovies;
     }
 
+    public void updateMovie(int movieID) {
+        try (Connection connection = connector.getConnection()) {
+            String sql = "SELECT * FROM Movie WHERE MovieID = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, movieID);
+            statement.execute();
+
+            ResultSet rs = statement.getResultSet();
+            if(rs.next()){
+                Movie movie = new Movie(
+                        rs.getString("Name"),
+                        rs.getInt("MovieID"),
+                        rs.getInt("Year"),
+                        rs.getString("Link"),
+                        rs.getInt("Rating"));
+                movie.setLastView(rs.getString("LastView"));
+                movie.setCategories(getCategories(movie.getId()));
+
+                movies.stream().filter(f -> f.getId() == movieID).forEach(m -> {
+                    m.setTitle(movie.getTitle());
+                    m.setYear(movie.getYear());
+                    m.setFilePath(movie.getFilePath());
+                    m.setRating(movie.getRating());
+                    m.setLastView(movie.getLastView());
+                    m.setCategories(movie.getCategories());
+                });
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public List<Category> getCategories(int movieID) {
         List<Category> movieCategories = new ArrayList<>();
 
@@ -68,19 +101,50 @@ public class MovieDAO {
         return movieCategories;
     }
 
-    public void addMovie(String movieTitle, int movieYear, String filePath) {
+    public void addMovieCategory(int movieID, int categoryID) {
+        try (Connection connection = connector.getConnection();) {
+            String sql = "BEGIN IF NOT EXISTS(SELECT * FROM CatMovie WHERE CategoryID = ? AND MovieID = ?) BEGIN INSERT INTO CatMovie (CategoryID,MovieID) VALUES (?,?) END END";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, categoryID);
+            statement.setInt(2, movieID);
+            statement.setInt(3, categoryID);
+            statement.setInt(4, movieID);
+            statement.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void removeMovieCategory(int movieID, int categoryID) {
+        try (Connection connection = connector.getConnection();) {
+            String sql = "DELETE FROM CatMovie WHERE CategoryID = ? AND MovieID = ?;";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, categoryID);
+            statement.setInt(2, movieID);
+            statement.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void addMovie(String movieTitle, int movieYear, String filePath,List<Category> categories) {
         try (Connection connection = connector.getConnection();) {
             String sql = "INSERT INTO Movie (Name,Year,Link) Values (?,?,?);";
-            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, movieTitle);
             statement.setInt(2, movieYear);
             statement.setString(3, filePath);
             statement.execute();
-
             ResultSet rs = statement.getGeneratedKeys();
             if (rs.next()) {
                 Movie movie = new Movie(movieTitle, rs.getInt(1), movieYear, filePath, 0);
+                for (Category category : categories) {
+                    addMovieCategory(movie.getId(), category.getId());
+                }
                 movies.add(movie);
+                updateMovie(movie.getId());
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -97,6 +161,18 @@ public class MovieDAO {
             statement.setInt(4, movie.getId());
             statement.execute();
 
+            List<Category> categoriesToRemove = getCategories(movie.getId()).stream().filter(category -> {
+                return movie.getCategories().stream().noneMatch(c -> c.getId() == category.getId());
+            }).collect(Collectors.toList());
+
+            for (Category category : categoriesToRemove) {
+                removeMovieCategory(movie.getId(), category.getId());
+            }
+
+            for (Category category : movie.getCategories()) {
+                addMovieCategory(movie.getId(), category.getId());
+            }
+            updateMovie(movie.getId());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

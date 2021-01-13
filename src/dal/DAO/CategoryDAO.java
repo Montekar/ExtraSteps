@@ -21,9 +21,6 @@ public class CategoryDAO {
     private void loadAllCategories() {
         List<Category> tempCategories = new ArrayList<>();
 
-        Category categoryAllMovies = new Category("All", 0);
-        tempCategories.add(categoryAllMovies);
-
         try (Connection connection = connector.getConnection()) {
             String sql = "SELECT * FROM Category";
             Statement statement = connection.createStatement();
@@ -43,7 +40,26 @@ public class CategoryDAO {
         }
         categories = tempCategories;
     }
+    public void updateCategory(int categoryID) {
+        try (Connection connection = connector.getConnection()) {
+            String sql = "SELECT * FROM Category WHERE CategoryID = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, categoryID);
+            statement.execute();
 
+            ResultSet rs = statement.getResultSet();
+            if(rs.next()){
+                Category category = new Category(rs.getString("Name"), categoryID);
+
+                categories.stream().filter(f -> f.getId() == categoryID).forEach(c -> {
+                    c.setName(category.getName());
+                    c.setId(category.getId());
+                });
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
     public void addCategory(String name) {
         try (Connection connection = connector.getConnection();) {
             String sql = "INSERT INTO Category (Name) Values (?);";
@@ -62,22 +78,19 @@ public class CategoryDAO {
     }
 
     public void editCategory(Category category) {
-        if (category.getId() > 0) {
             try (Connection connection = connector.getConnection();) {
                 String sql = "UPDATE Category SET Name = ? WHERE CategoryID = ?;";
                 PreparedStatement statement = connection.prepareStatement(sql);
                 statement.setString(1, category.getName());
                 statement.setInt(2, category.getId());
                 statement.execute();
-                categories.stream().filter(f -> f.getId() == category.getId()).forEach(c -> c.setName(category.getName()));
+                updateCategory(category.getId());
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-        }
     }
 
     public void deleteCategory(int id) {
-        if (id > 0) {
             try (Connection connection = connector.getConnection()) {
                 String sql = "DELETE FROM Category WHERE CategoryID = ?";
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -88,7 +101,6 @@ public class CategoryDAO {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-        }
     }
 
     public List<Category> getCategories() {

@@ -1,5 +1,6 @@
 package bll;
 
+import be.Category;
 import be.Movie;
 import dal.DAO.MovieDAO;
 import gui.controller.Alert;
@@ -20,12 +21,12 @@ public class MovieManager {
     public void loadAllCategories() {
     }
 
-    public void addMovie(String movieTitle, int movieYear, String filePath) {
+    public void addMovie(String movieTitle, int movieYear, String filePath, List<Category> categories) {
         boolean noTitleMatch = getMovies().stream().noneMatch(o -> o.getTitle().toLowerCase().equals(movieTitle.toLowerCase()));
-        if(noTitleMatch) {
-            movieDAO.addMovie(movieTitle, movieYear, filePath);
-        }else{
-            Alert.displayAlert("Adding Error","Movie Could not be added! Please choose a different title!");
+        if (noTitleMatch) {
+            movieDAO.addMovie(movieTitle, movieYear, filePath,categories);
+        } else {
+            Alert.displayAlert("Adding Error", "Movie Could not be added! Please choose a different title!");
         }
     }
 
@@ -37,7 +38,7 @@ public class MovieManager {
         movieDAO.deleteMovie(id);
     }
 
-    public void setRating(int newRating,int movieID){
+    public void setRating(int newRating, int movieID) {
         movieDAO.setRating(newRating, movieID);
     }
 
@@ -46,14 +47,15 @@ public class MovieManager {
     }
 
     public List<Movie> getCatMovies(int selectedCategoryID) {
-        if(selectedCategoryID == 0){
-            return getMovies();
-        }
         return movieDAO.getMovies().stream().filter(x -> x.getCategories().stream().anyMatch(s -> s.getId() == selectedCategoryID)).collect(Collectors.toList());
     }
 
     public void updateLastView(int movieID) {
         String timeStamp = new SimpleDateFormat("yyyy/MM/dd - HH:mm").format(Calendar.getInstance().getTime());
-        movieDAO.updateLastView(movieID,timeStamp);
+        movieDAO.updateLastView(movieID, timeStamp);
+    }
+
+    public void updateAllMovies() {
+        movieDAO.updateAllMovies();
     }
 }

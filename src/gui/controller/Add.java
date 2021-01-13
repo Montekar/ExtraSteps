@@ -172,7 +172,7 @@ public class Add {
         Button add = new Button("Add Category");
 
         add.setOnMouseClicked(mouseEvent -> {
-            if (categoryName.getText().isEmpty()) {
+            if (categoryName.getText().trim().isBlank()) {
                 Alert.displayAlert("Invalid details", "Please enter category name!");
             } else {
                 tempCategoryName.set(categoryName.getText());

@@ -67,7 +67,7 @@ public class MainController implements Initializable {
         choiceCategory.getSelectionModel().selectFirst();
         movieModel.setCategoryID(choiceCategory.getValue().getId());
         choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
-            if(choiceCategory.getSelectionModel().getSelectedItem()!=null) {
+            if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
                 movieModel.setCategoryID(choiceCategory.getValue().getId());
             }
         });
@@ -181,8 +181,11 @@ public class MainController implements Initializable {
     Method to add a Category
      */
     public void addCategory(ActionEvent actionEvent) {
+        String s = Add.addCategory();
+        if(s!=null) {
             categoryModel.addCategory(Add.addCategory());
             choiceCategory.getSelectionModel().selectFirst();
+        }
     }
 
     /*

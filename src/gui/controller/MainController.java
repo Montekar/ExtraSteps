@@ -181,9 +181,9 @@ public class MainController implements Initializable {
     Method to add a Category
      */
     public void addCategory(ActionEvent actionEvent) {
-        String s = Add.addCategory();
-        if(s!=null) {
-            categoryModel.addCategory(Add.addCategory());
+        String catName = Add.addCategory();
+        if(catName!=null) {
+            categoryModel.addCategory(catName);
             choiceCategory.getSelectionModel().selectFirst();
         }
     }

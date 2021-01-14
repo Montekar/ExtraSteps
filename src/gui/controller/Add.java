@@ -2,6 +2,8 @@ package gui.controller;
 
 import be.Category;
 import be.Movie;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -48,6 +50,16 @@ public class Add {
 
         Label label2 = new Label("Movie year");
         TextField movieYear = new TextField();
+
+        movieYear.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    movieYear.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
 
         HBox fileHbox = new HBox();
         TextField movieFile = new TextField();

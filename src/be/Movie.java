@@ -79,6 +79,14 @@ public class Movie {
         return title;
     }
 
+    public String getLastViewYear(){
+        if(lastView!=null){
+            String[] tempDate = getLastView().split("/");
+            return tempDate[0];
+        }
+        return null;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }

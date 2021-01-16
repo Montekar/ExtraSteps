@@ -89,9 +89,10 @@ public class MainController implements Initializable {
 
         movieModel.setRatingID(choiceCategory.getValue().getId());
         choiceRating.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
-//            if (choiceRating.getSelectionModel().getSelectedItem() != null) {
-//                movieModel.setRatingID(choiceRating.getValue().toLowerCase());
-//            }
+            if (choiceRating.getSelectionModel().getSelectedItem() != null) {
+                int value = Integer.parseInt(choiceRating.getValue().toString());
+                movieModel.setRatingID(value);
+            }
         });
 
 

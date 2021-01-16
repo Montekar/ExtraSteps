@@ -58,4 +58,8 @@ public class MovieManager {
     public void updateAllMovies() {
         movieDAO.updateAllMovies();
     }
+
+    public List<Movie> getRating(int selectedRatingID) {
+        return  movieDAO.getMovies().stream().filter(movie -> movie.getRatingProperty().equals(selectedRatingID)).collect(Collectors.toList());
+    }
 }

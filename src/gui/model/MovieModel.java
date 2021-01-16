@@ -64,6 +64,7 @@ public class MovieModel {
     public void updateObservableList() {
         moviesOverview.clear();
         moviesOverview.addAll(movieManager.getCatMovies(selectedCategoryID));
+        moviesOverview.addAll(movieManager.getRating(selectedRatingID));
     }
 
     public ObservableList<Movie> getObservableMovieList() {

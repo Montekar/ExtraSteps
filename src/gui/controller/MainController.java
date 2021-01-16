@@ -42,6 +42,10 @@ public class MainController implements Initializable {
 
     @FXML
     private ChoiceBox<Category> choiceCategory;
+
+    @FXML
+    private ChoiceBox<String> choiceRating;
+
     @FXML
     private Rating movieRating;
 
@@ -62,6 +66,17 @@ public class MainController implements Initializable {
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
         colMovieLastView.setCellValueFactory(movie -> movie.getValue().getLastViewProperty());
 
+        choiceRating.getItems().add("1");
+        choiceRating.getItems().add("2");
+        choiceRating.getItems().add("3");
+        choiceRating.getItems().add("4");
+        choiceRating.getItems().add("5");
+        choiceRating.getItems().add("6");
+        choiceRating.getItems().add("7");
+        choiceRating.getItems().add("8");
+        choiceRating.getItems().add("9");
+        choiceRating.getItems().add("10");
+
         movieTable.setItems(movieModel.getObservableMovieList());
         choiceCategory.setItems(categoryModel.getObservableCategoryList());
         choiceCategory.getSelectionModel().selectFirst();
@@ -70,6 +85,13 @@ public class MainController implements Initializable {
             if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
                 movieModel.setCategoryID(choiceCategory.getValue().getId());
             }
+        });
+
+        movieModel.setRatingID(choiceCategory.getValue().getId());
+        choiceRating.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+//            if (choiceRating.getSelectionModel().getSelectedItem() != null) {
+//                movieModel.setRatingID(choiceRating.getValue().toLowerCase());
+//            }
         });
 
 
@@ -114,6 +136,7 @@ public class MainController implements Initializable {
                 movieModel.setCategoryID(choiceCategory.getValue().getId());
             }
         });
+
         movieTable.setOnMousePressed(mouseEvent -> {
             if (movieTable.getSelectionModel().getSelectedItem() != null) {
                 int index = movieTable.getSelectionModel().getSelectedIndex();

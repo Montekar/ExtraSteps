@@ -65,8 +65,8 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <ChoiceBox fx:id="choiceRating" layoutX="415.0" layoutY="53.0" prefWidth="150.0" />
-      <Text layoutX="357.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:">
+      <ChoiceBox fx:id="choiceRating" layoutX="415.0" layoutY="47.0" prefWidth="150.0" />
+      <Text layoutX="304.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimum Rating:">
          <font>
             <Font size="14.0" />
          </font>

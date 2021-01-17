@@ -12,9 +12,9 @@
 <?import javafx.scene.text.Text?>
 <?import org.controlsfx.control.Rating?>
 
-<AnchorPane prefHeight="574.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="574.0" prefWidth="572.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <MenuBar prefHeight="26.0" prefWidth="228.0">
+      <MenuBar id="menu" prefHeight="26.0" prefWidth="234.0">
         <menus>
           <Menu mnemonicParsing="false" text="Movie">
             <items>
@@ -32,9 +32,9 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Top">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#addMovie" text="Recommended " />
-                  <MenuItem mnemonicParsing="false" onAction="#editMovie" text="All the time" />
-                  <MenuItem mnemonicParsing="false" onAction="#deleteMovie" text="Action" />
+                  <MenuItem mnemonicParsing="false" onAction="#topMovies" text="Top Movies" />
+                  <MenuItem mnemonicParsing="false" onAction="#topSeries" text="Top Series" />
+                  <MenuItem mnemonicParsing="false" onAction="#imdbPicks" text="IMDB picks" />
                </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Extras ">
@@ -44,7 +44,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TableView fx:id="movieTable" layoutX="-1.0" layoutY="159.0" prefHeight="295.0" prefWidth="572.0">
+      <TableView id="table" fx:id="movieTable" layoutX="3.0" layoutY="158.0" prefHeight="295.0" prefWidth="565.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="164.0">
         <columns>
           <TableColumn fx:id="colMovieTitle" prefWidth="190.3999878168106" text="Title" />
           <TableColumn fx:id="colMovieYear" prefWidth="91.20001220703125" text="Year" />
@@ -52,21 +52,21 @@
             <TableColumn fx:id="colMovieLastView" prefWidth="176.80001831054688" text="Last View" />
         </columns>
       </TableView>
-      <ChoiceBox fx:id="choiceCategory" layoutX="416.0" layoutY="13.0" prefHeight="26.0" prefWidth="147.0" />
-      <TextField fx:id="searchBar" alignment="CENTER" layoutY="132.0" prefHeight="26.0" prefWidth="578.0" promptText="Search For Movies" />
+      <ChoiceBox id="filter" fx:id="choiceCategory" layoutX="416.0" layoutY="13.0" prefHeight="26.0" prefWidth="150.0" />
+      <TextField id="searchBar" fx:id="searchBar" alignment="CENTER" layoutX="147.0" layoutY="126.0" prefHeight="26.0" prefWidth="277.0" promptText="Search For Movies" />
       <Rating fx:id="movieRating" layoutX="108.0" layoutY="510.0" max="10" prefHeight="18.0" prefWidth="216.0" rating="0.0" />
-      <Text layoutX="237.0" layoutY="501.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:">
+      <Text id="text" layoutX="237.0" layoutY="501.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:">
          <font>
             <Font size="32.0" />
          </font>
       </Text>
-      <Text layoutX="347.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Category: ">
+      <Text id="text" layoutX="347.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Category: ">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
-      <ChoiceBox fx:id="choiceRating" layoutX="415.0" layoutY="47.0" prefWidth="150.0" />
-      <Text layoutX="304.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimum Rating:">
+      <ChoiceBox id="filter" fx:id="choiceRating" layoutX="415.0" layoutY="47.0" prefWidth="150.0" />
+      <Text id="text" layoutX="304.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimum Rating:">
          <font>
             <Font size="14.0" />
          </font>

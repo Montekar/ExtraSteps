@@ -12,11 +12,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 import org.controlsfx.control.Rating;
+import org.w3c.dom.Text;
 
 import java.awt.*;
 import java.io.IOException;
@@ -45,7 +49,7 @@ public class MainController implements Initializable {
     @FXML
     private Rating movieRating;
 
-    private final MovieModel movieModel;
+    public final MovieModel movieModel;
     private final CategoryModel categoryModel;
     private static MoviePlayerManager moviePlayerManager;
 

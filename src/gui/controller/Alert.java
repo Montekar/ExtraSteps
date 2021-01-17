@@ -16,7 +16,6 @@ public class Alert {
 
         //blocking other windows usage if this window is open
         window.initModality(Modality.APPLICATION_MODAL);
-
         window.setTitle(alert);
 
         Label label = new Label();
@@ -31,6 +30,7 @@ public class Alert {
         Scene scene = new Scene(layout);
 
         window.setScene(scene);
+
         window.showAndWait();
 
     }

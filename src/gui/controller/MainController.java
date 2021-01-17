@@ -47,6 +47,8 @@ public class MainController implements Initializable {
     @FXML
     private ChoiceBox<Category> choiceCategory;
     @FXML
+    private ChoiceBox<String> choiceRating;
+    @FXML
     private Rating movieRating;
 
     public final MovieModel movieModel;
@@ -65,7 +67,6 @@ public class MainController implements Initializable {
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
         colMovieLastView.setCellValueFactory(movie -> movie.getValue().getLastViewProperty());
-
         movieTable.setItems(movieModel.getObservableMovieList());
         choiceCategory.setItems(categoryModel.getObservableCategoryList());
         choiceCategory.getSelectionModel().selectFirst();
@@ -75,7 +76,11 @@ public class MainController implements Initializable {
                 movieModel.setCategoryID(choiceCategory.getValue().getId());
             }
         });
-
+        choiceRating.getItems().add("ALL");
+        for (int i = 1; i <= 10; i++) {
+            choiceRating.getItems().add(String.valueOf(i));
+        }
+        choiceRating.getSelectionModel().selectFirst();
 
         FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(), p -> true);
 
@@ -83,9 +88,7 @@ public class MainController implements Initializable {
             filteredData.setPredicate(movie -> {
 
                 //if filter is empty display all data
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
+
 
                 //value to lower case
                 String newValLow = newValue.toLowerCase();
@@ -98,12 +101,20 @@ public class MainController implements Initializable {
                 } else if (String.valueOf(movie.getRating()).contains(newValLow)) {
                     return true;
                 }
-
                 return false;
             });
 
         }));
-
+        choiceRating.getSelectionModel().selectedItemProperty().addListener((observableValue, s, t1) -> {
+                    filteredData.setPredicate(movie -> {
+                        if(choiceRating.getSelectionModel().getSelectedItem()=="ALL"){
+                            return true;
+                        }else if(movie.getRating()>=Integer.parseInt(choiceRating.getSelectionModel().getSelectedItem())){
+                            return true;
+                        }
+                        return false;
+                    });
+        });
         //the filtered data is put inside of the sorted list
         SortedList<Movie> sortedData = new SortedList<>(filteredData);
 
@@ -186,7 +197,7 @@ public class MainController implements Initializable {
      */
     public void addCategory(ActionEvent actionEvent) {
         String catName = Add.addCategory();
-        if(catName!=null) {
+        if (catName != null) {
             categoryModel.addCategory(catName);
             choiceCategory.getSelectionModel().selectFirst();
         }

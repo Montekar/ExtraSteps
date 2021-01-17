@@ -15,7 +15,6 @@ public class MovieModel {
     private MovieManager movieManager;
     private ObservableList<Movie> moviesOverview;
     private int selectedCategoryID;
-    private int selectedRatingID;
 
     public MovieModel() {
         movieManager = new MovieManager();
@@ -56,15 +55,13 @@ public class MovieModel {
         updateObservableList();
     }
 
-    public void setRatingID(int selectedRatingID){
-        this.selectedCategoryID = selectedRatingID;
-        updateObservableList();
+    public List<Movie> getAllMovies(){
+        return movieManager.getMovies();
     }
 
     public void updateObservableList() {
         moviesOverview.clear();
         moviesOverview.addAll(movieManager.getCatMovies(selectedCategoryID));
-        moviesOverview.addAll(movieManager.getRating(selectedRatingID));
     }
 
     public ObservableList<Movie> getObservableMovieList() {

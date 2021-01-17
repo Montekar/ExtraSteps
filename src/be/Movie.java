@@ -109,6 +109,6 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "rating= " + rating + " " + "year= " + year + " " + "title= " + title + " " + "filePath= " + filePath + " " + "lastView= " + lastView + " " + "id= " + id + " " + "\n";
+        return title+", "+year+", "+categories;
     }
 }

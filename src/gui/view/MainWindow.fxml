@@ -72,6 +72,6 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <CheckBox fx:id="checkAllMovies" layoutX="415.0" layoutY="80.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="150.0" text="Show All Movies" />
+      <CheckBox id="text" fx:id="checkAllMovies" layoutX="415.0" layoutY="80.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="150.0" style="-fx-text-fill: white;" text="Show All Movies" />
    </children>
 </AnchorPane>

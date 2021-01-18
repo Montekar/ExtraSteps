@@ -11,10 +11,8 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Popup;
@@ -51,6 +49,9 @@ public class MainController implements Initializable {
     private ChoiceBox<String> choiceRating;
 
     @FXML
+    private CheckBox checkAllMovies;
+
+    @FXML
     private Rating movieRating;
 
     public final MovieModel movieModel;
@@ -63,22 +64,29 @@ public class MainController implements Initializable {
         moviePlayerManager = new MoviePlayerManager();
     }
 
+    private boolean movieFilter(Movie movie) {
+        if (movie.getTitle().toLowerCase().contains(searchBar.getText()) || String.valueOf(movie.getYear()).contains(searchBar.getText()) || String.valueOf(movie.getRating()).contains(searchBar.getText())) {
+            if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
+                if (choiceRating.getSelectionModel().getSelectedItem() == "ALL" || movie.getRating() >= Integer.parseInt(choiceRating.getSelectionModel().getSelectedItem())) {
+                    int categoryID = choiceCategory.getSelectionModel().getSelectedItem().getId();
+                    if (checkAllMovies.isSelected() || movie.getCategories().stream().anyMatch(category1 -> category1.getId() == categoryID)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colMovieTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
         colMovieLastView.setCellValueFactory(movie -> movie.getValue().getLastViewProperty());
-
         movieTable.setItems(movieModel.getObservableMovieList());
         choiceCategory.setItems(categoryModel.getObservableCategoryList());
         choiceCategory.getSelectionModel().selectFirst();
-        movieModel.setCategoryID(choiceCategory.getValue().getId());
-        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
-            if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
-                movieModel.setCategoryID(choiceCategory.getValue().getId());
-            }
-        });
         choiceRating.getItems().add("ALL");
         for (int i = 1; i <= 10; i++) {
             choiceRating.getItems().add(String.valueOf(i));
@@ -86,38 +94,18 @@ public class MainController implements Initializable {
         choiceRating.getSelectionModel().selectFirst();
 
         FilteredList<Movie> filteredData = new FilteredList<>(movieModel.getObservableMovieList(), p -> true);
-
+        filteredData.setPredicate(this::movieFilter);
+        checkAllMovies.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
+            filteredData.setPredicate(this::movieFilter);
+        });
         searchBar.textProperty().addListener(((observableValue, oldValue, newValue) -> {
-            filteredData.setPredicate(movie -> {
-
-                //if filter is empty display all data
-
-
-                //value to lower case
-                String newValLow = newValue.toLowerCase();
-
-                //checks if the value is part of data in any movie
-                if (movie.getTitle().toLowerCase().contains(newValLow)) {
-                    return true;
-                } else if (String.valueOf(movie.getYear()).contains(newValLow)) {
-                    return true;
-                } else if (String.valueOf(movie.getRating()).contains(newValLow)) {
-                    return true;
-                }
-
-                return false;
-            });
-
+            filteredData.setPredicate(this::movieFilter);
         }));
+        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
+            filteredData.setPredicate(this::movieFilter);
+        });
         choiceRating.getSelectionModel().selectedItemProperty().addListener((observableValue, s, t1) -> {
-                    filteredData.setPredicate(movie -> {
-                        if(choiceRating.getSelectionModel().getSelectedItem()=="ALL"){
-                            return true;
-                        }else if(movie.getRating()>=Integer.parseInt(choiceRating.getSelectionModel().getSelectedItem())){
-                            return true;
-                        }
-                        return false;
-                    });
+            filteredData.setPredicate(this::movieFilter);
         });
         //the filtered data is put inside of the sorted list
         SortedList<Movie> sortedData = new SortedList<>(filteredData);
@@ -128,11 +116,6 @@ public class MainController implements Initializable {
         //displaying the data
         movieTable.setItems(sortedData);
 
-        choiceCategory.getSelectionModel().selectedItemProperty().addListener((observableValue, category, t1) -> {
-            if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
-                movieModel.setCategoryID(choiceCategory.getValue().getId());
-            }
-        });
 
         movieTable.setOnMousePressed(mouseEvent -> {
             if (movieTable.getSelectionModel().getSelectedItem() != null) {
@@ -159,6 +142,9 @@ public class MainController implements Initializable {
                 movieModel.setRating(rating, movieID);
                 movieTable.getSelectionModel().select(index);
             }
+        });
+        checkAllMovies.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
+                choiceCategory.setDisable(checkAllMovies.isSelected());
         });
     }
 
@@ -204,7 +190,7 @@ public class MainController implements Initializable {
         String catName = Add.addCategory();
         if (catName != null) {
             categoryModel.addCategory(catName);
-            choiceCategory.getSelectionModel().selectFirst();
+            choiceCategory.getSelectionModel().selectLast();
         }
     }
 
@@ -220,7 +206,6 @@ public class MainController implements Initializable {
                 categoryModel.editCategory(tempCategory);
                 movieModel.updateAllMovies();
                 choiceCategory.getSelectionModel().select(index);
-                movieModel.setCategoryID(tempCategory.getId());
 
             }
         }
@@ -232,9 +217,13 @@ public class MainController implements Initializable {
     public void deleteCategory(ActionEvent actionEvent) {
         if (choiceCategory.getSelectionModel().getSelectedItem() != null) {
             int selectedId = choiceCategory.getSelectionModel().getSelectedItem().getId();
-            categoryModel.deleteCategory(selectedId);
-            movieModel.updateAllMovies();
-            choiceCategory.getSelectionModel().selectFirst();
+            if (movieModel.getCatMovies(selectedId).stream().anyMatch(movie -> movie.getCategories().size() <= 1)) {
+                Alert.displayAlert("Error", "You can not delete a category that has movies with only 1 category!");
+            } else {
+                categoryModel.deleteCategory(selectedId);
+                movieModel.updateAllMovies();
+                choiceCategory.getSelectionModel().selectFirst();
+            }
         }
     }
 

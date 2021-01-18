@@ -11,14 +11,12 @@ import java.util.List;
 
 public class MovieModel {
 
-    public String getFilePath;
     private MovieManager movieManager;
     private ObservableList<Movie> moviesOverview;
-    private int selectedCategoryID;
 
     public MovieModel() {
         movieManager = new MovieManager();
-        moviesOverview = FXCollections.observableArrayList(new ArrayList<>());
+        moviesOverview = FXCollections.observableArrayList(movieManager.getMovies());
     }
 
     public void updateAllMovies(){
@@ -40,6 +38,10 @@ public class MovieModel {
         updateObservableList();
     }
 
+    public List<Movie> getCatMovies(int catID){
+        return movieManager.getCatMovies(catID);
+    }
+
     public void setRating(int newRating, int id){
         movieManager.setRating(newRating, id);
         updateObservableList();
@@ -50,10 +52,6 @@ public class MovieModel {
         updateObservableList();
     }
 
-    public void setCategoryID(int selectedCategoryID) {
-        this.selectedCategoryID = selectedCategoryID;
-        updateObservableList();
-    }
 
     public List<Movie> getAllMovies(){
         return movieManager.getMovies();
@@ -61,7 +59,7 @@ public class MovieModel {
 
     public void updateObservableList() {
         moviesOverview.clear();
-        moviesOverview.addAll(movieManager.getCatMovies(selectedCategoryID));
+        moviesOverview.addAll(movieManager.getMovies());
     }
 
     public ObservableList<Movie> getObservableMovieList() {

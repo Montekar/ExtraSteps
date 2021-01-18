@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -52,7 +53,7 @@
             <TableColumn fx:id="colMovieLastView" prefWidth="176.80001831054688" text="Last View" />
         </columns>
       </TableView>
-      <ChoiceBox id="filter" fx:id="choiceCategory" layoutX="416.0" layoutY="13.0" prefHeight="26.0" prefWidth="150.0" />
+      <ChoiceBox id="filter" fx:id="choiceCategory" layoutX="415.0" layoutY="14.0" prefHeight="26.0" prefWidth="150.0" />
       <TextField id="searchBar" fx:id="searchBar" alignment="CENTER" layoutX="147.0" layoutY="126.0" prefHeight="26.0" prefWidth="277.0" promptText="Search For Movies" />
       <Rating fx:id="movieRating" layoutX="108.0" layoutY="510.0" max="10" prefHeight="18.0" prefWidth="216.0" rating="0.0" />
       <Text id="text" layoutX="237.0" layoutY="501.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rating:">
@@ -60,16 +61,17 @@
             <Font size="32.0" />
          </font>
       </Text>
-      <Text id="text" layoutX="347.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Category: ">
+      <Text id="text" layoutX="346.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Category: ">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
-      <ChoiceBox id="filter" fx:id="choiceRating" layoutX="415.0" layoutY="47.0" prefWidth="150.0" />
-      <Text id="text" layoutX="304.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimum Rating:">
+      <ChoiceBox id="filter" fx:id="choiceRating" layoutX="414.0" layoutY="48.0" prefWidth="150.0" />
+      <Text id="text" layoutX="303.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimum Rating:">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
+      <CheckBox fx:id="checkAllMovies" layoutX="415.0" layoutY="80.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="150.0" text="Show All Movies" />
    </children>
 </AnchorPane>

@@ -100,7 +100,33 @@ public class MovieDAO {
 
         return movieCategories;
     }
+    public List<Movie> getCatMovies(int categoryID) {
+        List<Movie> movies = new ArrayList<>();
 
+        try (Connection connection = connector.getConnection()) {
+            String sql = "SELECT * FROM CatMovie INNER JOIN Movie ON CatMovie.MovieID = Movie.MovieID WHERE CategoryID = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, categoryID);
+            statement.execute();
+
+            ResultSet rs = statement.getResultSet();
+            while (rs.next()) {
+                Movie movie = new Movie(
+                        rs.getString("Name"),
+                        rs.getInt("MovieID"),
+                        rs.getInt("Year"),
+                        rs.getString("Link"),
+                        rs.getInt("Rating"));
+                movie.setLastView(rs.getString("LastView"));
+                movie.setCategories(getCategories(movie.getId()));
+                movies.add(movie);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return movies;
+    }
     public void addMovieCategory(int movieID, int categoryID) {
         try (Connection connection = connector.getConnection();) {
             String sql = "BEGIN IF NOT EXISTS(SELECT * FROM CatMovie WHERE CategoryID = ? AND MovieID = ?) BEGIN INSERT INTO CatMovie (CategoryID,MovieID) VALUES (?,?) END END";

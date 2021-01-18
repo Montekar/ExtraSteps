@@ -46,8 +46,10 @@ public class MainController implements Initializable {
 
     @FXML
     private ChoiceBox<Category> choiceCategory;
+
     @FXML
     private ChoiceBox<String> choiceRating;
+
     @FXML
     private Rating movieRating;
 
@@ -67,6 +69,7 @@ public class MainController implements Initializable {
         colMovieYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colMovieRating.setCellValueFactory(rating -> rating.getValue().getRatingProperty());
         colMovieLastView.setCellValueFactory(movie -> movie.getValue().getLastViewProperty());
+
         movieTable.setItems(movieModel.getObservableMovieList());
         choiceCategory.setItems(categoryModel.getObservableCategoryList());
         choiceCategory.getSelectionModel().selectFirst();
@@ -101,6 +104,7 @@ public class MainController implements Initializable {
                 } else if (String.valueOf(movie.getRating()).contains(newValLow)) {
                     return true;
                 }
+
                 return false;
             });
 
@@ -129,6 +133,7 @@ public class MainController implements Initializable {
                 movieModel.setCategoryID(choiceCategory.getValue().getId());
             }
         });
+
         movieTable.setOnMousePressed(mouseEvent -> {
             if (movieTable.getSelectionModel().getSelectedItem() != null) {
                 int index = movieTable.getSelectionModel().getSelectedIndex();
@@ -239,6 +244,30 @@ public class MainController implements Initializable {
     public void goTo(ActionEvent actionEvent) {
         try {
             Desktop.getDesktop().browse(new URL("https://www.imdb.com/").toURI());
+        } catch (IOException | URISyntaxException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    public void topMovies(ActionEvent actionEvent) {
+        try {
+            Desktop.getDesktop().browse(new URL("https://www.imdb.com/chart/top/?ref_=nv_mv_250").toURI());
+        } catch (IOException | URISyntaxException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    public void topSeries(ActionEvent actionEvent) {
+        try {
+            Desktop.getDesktop().browse(new URL("https://www.imdb.com/chart/toptv/?ref_=nv_tvv_250").toURI());
+        } catch (IOException | URISyntaxException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    public void imdbPicks(ActionEvent actionEvent) {
+        try {
+            Desktop.getDesktop().browse(new URL("https://www.imdb.com/imdbpicks/?ref_=nv_pi").toURI());
         } catch (IOException | URISyntaxException ioException) {
             ioException.printStackTrace();
         }

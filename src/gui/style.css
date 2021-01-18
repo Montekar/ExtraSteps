@@ -1,0 +1,27 @@
+.root{
+    -fx-background-color: rgb(51, 63, 82);
+    -fx-font-family: Century;
+    -fx-fill: white;
+}
+
+#text{
+    -fx-fill: white;
+}
+
+#table{
+    -fx-end-margin: auto;
+    -fx-background-color: rgb(163, 179, 204);
+}
+
+#searchBar{
+    -fx-padding: 5px;
+}
+
+#menu{
+   -fx-opacity: 0.5;
+}
+
+#menu:hover{
+    -fx-opacity: 1;
+}
+
